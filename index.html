@@ -15,7 +15,7 @@
 @media (max-width:520px){.handReport .headline{font-size:16px}.handReport .quick{grid-template-columns:1fr 1fr}.handReport .pill{font-size:12px;padding:5px}.handReport ul{font-size:12px;margin-left:16px}}
 @media (max-height:720px) and (max-width:520px){.topbar{padding:6px 8px}.logo{width:32px;height:32px}.title{font-size:20px}.btn{padding:10px 9px;font-size:15px}.status{font-size:13px;padding:5px 10px}.bidGrid button{height:36px}.mobileBid{padding:6px 8px}.coachLine{display:none}.tableWrap{padding:6px}.player{padding:5px}.avatar{width:28px;height:28px}.pName{font-size:14px}.pMeta{font-size:10.5px}.message{font-size:14px}.hand{height:96px}.card{width:48px;height:76px}.felt:after{font-size:17px}.youPanel{padding:4px}.table{gap:4px}}
 
-/* v0.4.2 mobile match-over header fit */
+/* v0.4.3 mobile match-over header fit */
 .handReport{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .handReport .pill{min-width:0;overflow-wrap:anywhere}
 .handReport .quick{min-width:0}
@@ -32,7 +32,7 @@
   .handReport li{margin:1px 0}
 }
 
-/* v0.4.2: prevent the match-over control from colliding with the title on iPhone */
+/* v0.4.3: prevent the match-over control from colliding with the title on iPhone */
 .app.matchOver #newHandBtn{background:#ffd365;color:#111;opacity:1;filter:none}
 @media (max-width:520px){
   .topbar{grid-template-columns:minmax(0,1fr) auto auto auto}
@@ -51,7 +51,7 @@
   .app.matchOver .title{max-width:112px}
 }
 
-/* v0.4.2: rule coach / renege teaching */
+/* v0.4.3: rule coach / renege teaching */
 .ruleCoach{border:1px solid rgba(255,211,101,.34);background:rgba(255,211,101,.10);border-radius:12px;padding:7px 9px;margin:6px 3px 0;color:#eafff8;font-size:13px;line-height:1.22;font-weight:800}
 .ruleCoach b{color:var(--gold)}
 .ruleCoach.warn{border-color:rgba(239,71,111,.55);background:rgba(239,71,111,.14)}
@@ -69,7 +69,7 @@
 <body>
 <div id="app" class="app bidding">
   <header class="topbar">
-    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.4.2</span></div></div>
+    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.4.3</span></div></div>
     <button id="newHandBtn" class="btn gold">New Hand</button>
     <button id="hintBtn" class="btn light">Hint</button>
     <button id="menuBtn" class="btn dark menu">☰ Menu</button>
@@ -161,12 +161,52 @@ function bidRead(){const h=state.hands.S;const aces=h.filter(c=>c.rank==='A'&&!i
 function startHand(){if(state.matchOver){toast('Match is over. Use Menu → Reset match.');return}track('Started hand');state.handNo++;state.phase='bidding';state.trick=[];state.tricks={S:0,W:0,N:0,E:0};state.bids={S:null,W:null,N:null,E:null};state.turn='S';state.leader='S';state.spadesBroken=false;let d=shuffle(deck());for(const p of players)state.hands[p]=[];for(let i=0;i<d.length;i++)state.hands[players[i%4]].push(d[i]);for(const p of players)sortHand(state.hands[p]);const h=state.hands.S;const counts=suits.map(s=>h.filter(c=>!isTrump(c)&&c.suit===s).length);state.handStats={legalPlays:0,reneges:0,humanPlays:[],recommendedBid:estimateBid(h),startTrumps:h.filter(isTrump).length,startAces:h.filter(c=>c.rank==='A'&&!isTrump(c)).length,startShorts:counts.filter(n=>n<=1).length,startSpecials:specialList(h)};state.lastReport='';state.stickyLog='';state.log='Choose your bid using the bid buttons above.';state.selected=null;render()}
 function bid(n){if(state.phase!=='bidding')return;state.bids.S=n;state.bids.W=estimateBid(state.hands.W);state.bids.N=estimateBid(state.hands.N);state.bids.E=estimateBid(state.hands.E);state.phase='play';state.turn='S';state.leader='S';state.stickyLog='';state.log=`You bid ${n}. Play a card to lead. ${modeCoachLine()}`;render()}
 function currentWinnerPlay(){if(!state.trick.length)return null;let best=state.trick[0];for(const play of state.trick.slice(1))if(beats(play.card,best.card))best=play;return best}
-function aiChoose(p){const l=legal(state.hands[p]);if(state.trick.length===0){let non=l.filter(c=>!isTrump(c));let pool=non.length?non:l;return lowFirst(pool)[0]}const winPlay=currentWinnerPlay();const winning=winPlay.card;const partnerWinning=team(winPlay.player)===team(p);const canWin=lowFirst(l.filter(c=>beats(c,winning)));const led=effectiveSuit(state.trick[0].card);const follow=l.filter(c=>effectiveSuit(c)===led);const nonTrump=lowFirst(l.filter(c=>!isTrump(c)));if(partnerWinning){const safeUnder=lowFirst(l.filter(c=>!beats(c,winning)));if(safeUnder.length)return safeUnder[0];if(nonTrump.length)return nonTrump[0];return lowFirst(l)[0]}if(canWin.length)return canWin[0];if(!follow.length&&nonTrump.length)return nonTrump[0];return lowFirst(l)[0]}
+function aiChoose(p){
+  const l=legal(state.hands[p]);
+  if(state.trick.length===0){
+    let non=l.filter(c=>!isTrump(c));
+    let pool=non.length?non:l;
+    return lowFirst(pool)[0];
+  }
+
+  const winPlay=currentWinnerPlay();
+  const winning=winPlay.card;
+  const led=effectiveSuit(state.trick[0].card);
+  const follow=l.filter(c=>effectiveSuit(c)===led);
+  const partnerWinning=team(winPlay.player)===team(p);
+  const canWin=lowFirst(l.filter(c=>beats(c,winning)));
+  const nonTrump=lowFirst(l.filter(c=>!isTrump(c)));
+
+  // Partnership rule:
+  // If your partner is already winning the trick, do NOT waste a higher card or cut/overtrump
+  // unless the rules force it. Prefer the lowest legal card that does not beat partner.
+  if(partnerWinning){
+    const legalLowers=lowFirst(l.filter(c=>!beats(c,winning)));
+    if(legalLowers.length){
+      // If following suit, this chooses the cheapest card under partner's winner.
+      // If void/off-suit, this chooses the cheapest throwaway and avoids spending trump.
+      const throwaways=lowFirst(legalLowers.filter(c=>!isTrump(c)));
+      return throwaways[0]||legalLowers[0];
+    }
+
+    // If every legal card would overtake partner, play the cheapest forced card.
+    // This can happen when you only have a higher card in the suit led.
+    return lowFirst(l)[0];
+  }
+
+  // If the opponent is winning, try to save the trick with the cheapest winning card.
+  if(canWin.length)return canWin[0];
+
+  // If you cannot win and you are void, throw away the cheapest non-trump when possible.
+  if(!follow.length&&nonTrump.length)return nonTrump[0];
+
+  return lowFirst(l)[0];
+}
 function playCard(p,card){const l=legal(state.hands[p]);if(!l.some(c=>c.id===card.id)){toast('Renege prevention: illegal card blocked.');return false}state.hands[p]=state.hands[p].filter(c=>c.id!==card.id);if(p==='S'){state.handStats.legalPlays++;state.handStats.humanPlays.push({card:displayCard(card),led:state.trick[0]?.card?effectiveSuit(state.trick[0].card):'lead',trickNo:13-state.hands.S.length})}if(isTrump(card))state.spadesBroken=true;state.trick.push({player:p,card});return true}
 function humanCard(card){if(state.phase!=='play'||state.turn!=='S')return;if(state.stickyLog)state.stickyLog='';const l=legal(state.hands.S);if(!l.some(c=>c.id===card.id)){state.handStats.reneges++;track('Illegal renege blocked',{requiredSuit:state.trick[0]?.card?.suit?'follow_suit':'lead_rule'});const why=legalReason(card);state.selected=null;state.log=`<div class="ruleCoach warn"><b>Illegal play blocked.</b> ${why||'That card is not legal in this position.'}</div>`;toast('Illegal play blocked. Follow the highlighted suit.');render();return}if(state.selected!==card.id){state.selected=card.id;state.log=`Tap ${displayCard(card)} again to play it.`;render();return}playCard('S',card);state.selected=null;afterPlay()}
 function trickReviewText(w){const cards=state.trick.map(t=>`${names[t.player]} ${displayCard(t.card)}`).join(' · ');return `<b>Trick complete — ${names[w]} won.</b><br><span style="color:#d8eee6">Count these cards before the next trick: ${cards}</span>`}
 function afterPlay(){if(state.trick.length===4){const w=trickWinner();state.tricks[w]++;state.turn=w;state.leader=w;state.phase='resolve';state.stickyLog=trickReviewText(w);state.log='';render();setTimeout(()=>{state.trick=[];if(state.hands.S.length===0){scoreHand();return}state.phase='play';state.log=`${names[w]} won the trick. ${names[w]} leads next.`;render();if(state.turn!=='S')setTimeout(aiLoop,650)},2200);return}state.turn=next(state.turn);render();if(state.turn!=='S')setTimeout(aiLoop,650)}
-function aiLoop(){if(state.phase!=='play'||state.turn==='S')return;const p=state.turn;state.log=`${names[p]} is thinking…`;render();setTimeout(()=>{const before=currentWinnerPlay();const c=aiChoose(p);let note='';if(before&&p==='N'){const partnerWinning=team(before.player)===team(p);if(partnerWinning&&isTrump(c)&&!isTrump(before.card))note=' Partner avoided cutting when possible.';else if(!partnerWinning&&beats(c,before.card))note=' Partner saved the trick with the cheapest winning card.';else if(partnerWinning)note=' Partner protected your winning card by playing low.'}playCard(p,c);let special=isSpecialTrump(c)?` <b>${displayCard(c)}</b> is special trump in ${ruleset().short} mode.`:'';state.log=`${names[p]} played ${displayCard(c)}.${special}${note}`;afterPlay()},420)}
+function aiLoop(){if(state.phase!=='play'||state.turn==='S')return;const p=state.turn;state.log=`${names[p]} is thinking…`;render();setTimeout(()=>{const before=currentWinnerPlay();const c=aiChoose(p);let note='';if(before&&p==='N'){const partnerWinning=team(before.player)===team(p);if(partnerWinning&&!beats(c,before.card))note=' Partner protected your winning card by playing the lowest safe card.';else if(partnerWinning&&beats(c,before.card))note=' Partner was forced to overtake because every legal card was higher.';else if(!partnerWinning&&beats(c,before.card))note=' Partner saved the trick with the cheapest winning card.'}playCard(p,c);let special=isSpecialTrump(c)?` <b>${displayCard(c)}</b> is special trump in ${ruleset().short} mode.`:'';state.log=`${names[p]} played ${displayCard(c)}.${special}${note}`;afterPlay()},420)}
 function scoreTeam(t){const ps=t==='NS'?['S','N']:['W','E'];const bid=ps.reduce((a,p)=>a+(state.bids[p]||0),0);const got=ps.reduce((a,p)=>a+state.tricks[p],0);let delta=0,made=got>=bid;if(made){delta=bid*10+(got-bid);state.bags[t]+=got-bid;if(state.bags[t]>=10){delta-=100;state.bags[t]-=10}}else delta=-10*bid;state.scores[t]+=delta;return {bid,got,delta,made}}
 function ratingLabel(score){return score>=97?'A+':score>=92?'A':score>=88?'A-':score>=84?'B+':score>=80?'B':score>=74?'B-':score>=68?'C+':score>=62?'C':score>=55?'D':'F'}
 function stars(score){let n=score>=92?5:score>=84?4:score>=74?3:score>=64?2:1;return '★★★★★'.slice(0,n)+'☆☆☆☆☆'.slice(0,5-n)}
