@@ -15,7 +15,7 @@
 @media (max-width:520px){.handReport .headline{font-size:16px}.handReport .quick{grid-template-columns:1fr 1fr}.handReport .pill{font-size:12px;padding:5px}.handReport ul{font-size:12px;margin-left:16px}}
 @media (max-height:720px) and (max-width:520px){.topbar{padding:6px 8px}.logo{width:32px;height:32px}.title{font-size:20px}.btn{padding:10px 9px;font-size:15px}.status{font-size:13px;padding:5px 10px}.bidGrid button{height:36px}.mobileBid{padding:6px 8px}.coachLine{display:none}.tableWrap{padding:6px}.player{padding:5px}.avatar{width:28px;height:28px}.pName{font-size:14px}.pMeta{font-size:10.5px}.message{font-size:14px}.hand{height:96px}.card{width:48px;height:76px}.felt:after{font-size:17px}.youPanel{padding:4px}.table{gap:4px}}
 
-/* v0.4.1 mobile match-over header fit */
+/* v0.4.2 mobile match-over header fit */
 .handReport{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .handReport .pill{min-width:0;overflow-wrap:anywhere}
 .handReport .quick{min-width:0}
@@ -32,7 +32,7 @@
   .handReport li{margin:1px 0}
 }
 
-/* v0.4.1: prevent the match-over control from colliding with the title on iPhone */
+/* v0.4.2: prevent the match-over control from colliding with the title on iPhone */
 .app.matchOver #newHandBtn{background:#ffd365;color:#111;opacity:1;filter:none}
 @media (max-width:520px){
   .topbar{grid-template-columns:minmax(0,1fr) auto auto auto}
@@ -51,7 +51,7 @@
   .app.matchOver .title{max-width:112px}
 }
 
-/* v0.4.1: rule coach / renege teaching */
+/* v0.4.2: rule coach / renege teaching */
 .ruleCoach{border:1px solid rgba(255,211,101,.34);background:rgba(255,211,101,.10);border-radius:12px;padding:7px 9px;margin:6px 3px 0;color:#eafff8;font-size:13px;line-height:1.22;font-weight:800}
 .ruleCoach b{color:var(--gold)}
 .ruleCoach.warn{border-color:rgba(239,71,111,.55);background:rgba(239,71,111,.14)}
@@ -61,11 +61,20 @@
 @media (max-width:520px){.ruleCoach{font-size:12px;padding:6px 8px;margin-top:4px}.card.illegal:after{font-size:13px}}
 .card.special,.played.special{box-shadow:0 0 0 2px rgba(255,211,101,.75),0 4px 12px rgba(0,0,0,.45)}
 </style>
+
+<!-- Cloudflare Web Analytics
+     1) In Cloudflare dashboard, go to Web Analytics → Add a site.
+     2) Add hostname: grindocboy.github.io
+     3) Copy Cloudflare's JS snippet and replace the placeholder token below.
+     4) Keep this just before </head> or before </body>.
+     Note: Cloudflare Web Analytics gives traffic/device/referrer analytics. Gameplay events below remain local-only. -->
+<<!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bcf3c824273d481db353b0cb79755b37"}'></script><!-- End Cloudflare Web Analytics -->
+
 </head>
 <body>
 <div id="app" class="app bidding">
   <header class="topbar">
-    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.4.1</span></div></div>
+    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.4.2</span></div></div>
     <button id="newHandBtn" class="btn gold">New Hand</button>
     <button id="hintBtn" class="btn light">Hint</button>
     <button id="menuBtn" class="btn dark menu">☰ Menu</button>
@@ -109,14 +118,15 @@ const RULESETS={
 };
 let currentMode=localStorage.getItem('tricksterRuleMode')||'standard';
 if(!RULESETS[currentMode])currentMode='standard';
-const ANALYTICS={enabled:true,provider:'plausible-compatible',domain:'',debug:false};
+const ANALYTICS={enabled:true,provider:'cloudflare-web-analytics',domain:'grindocboy.github.io',debug:false};
 const sessionId=crypto?.randomUUID?crypto.randomUUID():'s-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 function track(event,props={}){
   if(!ANALYTICS.enabled)return;
   const safeProps={mode:currentMode,phase:state?.phase||'init',...props};
-  // Privacy guardrail: product-health analytics only. No names, emails, hands, exact cards, IP collection, or player profiles are sent by this app.
-  if(window.plausible){window.plausible(event,{props:safeProps});}
-  if(ANALYTICS.debug)console.info('[analytics]',event,safeProps);
+  // Privacy guardrail: gameplay/product-health counters stay local-only.
+  // Cloudflare Web Analytics, when its beacon token is added, tracks aggregate traffic such as visits, device/browser, referrers, and returning visits.
+  // This app does not send names, emails, exact hands, exact cards, children’s info, or personal player profiles.
+  if(ANALYTICS.debug)console.info('[analytics-local]',event,safeProps);
   try{
     const key='tricksterLocalAnalyticsCounts';
     const counts=JSON.parse(localStorage.getItem(key)||'{}');
@@ -173,7 +183,7 @@ function rulesHTML(){return `<b>${ruleset().name}</b><br>${ruleset().explain}<br
 function showCoach(){track('Clicked hint');let text='Start a new hand and I’ll coach you.';if(state.phase==='bidding')text=bidRead();else if(state.phase==='resolve')text=`${state.stickyLog||state.log}<br><br><b>Card counting drill:</b> pause here and remember the led suit, any trump used, and which high cards are now gone.`;else if(state.phase==='play'){const l=legal(state.hands.S);text=state.turn==='S'?(ruleCoachText()||`Legal cards are highlighted. ${l.length<state.hands.S.length?'You must follow suit.':'You can play any highlighted card.'}`):`${names[state.turn]} is playing. Watch the led suit and count cards. ${modeCoachLine()}`}else text=state.lastReport||state.log;document.getElementById('coachText').innerHTML=text;openSheet('coachSheet')}
 function rules(){document.getElementById('coachText').innerHTML=rulesHTML();openSheet('coachSheet')}
 function appNotes(){document.getElementById('coachText').innerHTML='<b>App Store prep</b><br>Next steps: stronger per-mode AI, deeper replay analysis, private beta feedback, privacy policy, app icon, and TestFlight build.';openSheet('coachSheet')}
-function privacyNotes(){let counts={};try{counts=JSON.parse(localStorage.getItem('tricksterLocalAnalyticsCounts')||'{}')}catch(e){}const rows=['Visited app','Started hand','Completed hand','Completed match','Selected rule set','Clicked hint','Illegal renege blocked'].map(k=>`<div style="display:flex;justify-content:space-between;gap:10px"><span>${k}</span><b>${counts[k]||0}</b></div>`).join('');document.getElementById('coachText').innerHTML=`<b>Privacy-friendly analytics</b><br>Trickster AI tracks only anonymous product-health events: visited app, started hand, completed hand, completed match, selected rule set, clicked hint, and illegal renege blocked.<br><br><b>Not tracked</b><br>No names, emails, exact hands/cards, children’s info, or personal player profiles are collected by this app.<br><br><b>How collection works</b><br>The game still runs locally in each browser. These counters are also stored locally on this device. If you later add Plausible or another privacy-friendly analytics provider, the same safe events can be sent there without changing gameplay.<br><br><b>This device counts</b><br>${rows}`;openSheet('coachSheet')}
+function privacyNotes(){let counts={};try{counts=JSON.parse(localStorage.getItem('tricksterLocalAnalyticsCounts')||'{}')}catch(e){}const rows=['Visited app','Started hand','Completed hand','Completed match','Selected rule set','Clicked hint','Illegal renege blocked'].map(k=>`<div style="display:flex;justify-content:space-between;gap:10px"><span>${k}</span><b>${counts[k]||0}</b></div>`).join('');document.getElementById('coachText').innerHTML=`<b>Cloudflare Web Analytics</b><br>Use Cloudflare Web Analytics for free aggregate traffic signals: visits, device/browser mix, referrers, and returning visits. Add your Cloudflare beacon token in the commented script near the top of index.html.<br><br><b>Gameplay stays local</b><br>The game still runs locally in each browser. Product-health events such as started hand, completed hand, selected rule set, clicked hint, and illegal renege blocked are stored as local counters on this device only.<br><br><b>Not tracked by this app</b><br>No names, emails, exact hands/cards, children’s info, or personal player profiles are collected or sent by this app.<br><br><b>This device counts</b><br>${rows}`;openSheet('coachSheet')}
 function openSheet(id){document.getElementById('overlay').classList.add('show');document.getElementById(id).classList.add('show')}
 function closeSheets(){document.getElementById('overlay').classList.remove('show');document.querySelectorAll('.bottomSheet,.menuSheet').forEach(x=>x.classList.remove('show'))}
 function toast(t){const el=document.getElementById('toast');el.textContent=t;el.classList.add('show');setTimeout(()=>el.classList.remove('show'),2500)}
