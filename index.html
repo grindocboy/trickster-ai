@@ -15,7 +15,7 @@
 @media (max-width:520px){.handReport .headline{font-size:16px}.handReport .quick{grid-template-columns:1fr 1fr}.handReport .pill{font-size:12px;padding:5px}.handReport ul{font-size:12px;margin-left:16px}}
 @media (max-height:720px) and (max-width:520px){.topbar{padding:6px 8px}.logo{width:32px;height:32px}.title{font-size:20px}.btn{padding:10px 9px;font-size:15px}.status{font-size:13px;padding:5px 10px}.bidGrid button{height:36px}.mobileBid{padding:6px 8px}.coachLine{display:none}.tableWrap{padding:6px}.player{padding:5px}.avatar{width:28px;height:28px}.pName{font-size:14px}.pMeta{font-size:10.5px}.message{font-size:14px}.hand{height:96px}.card{width:48px;height:76px}.felt:after{font-size:17px}.youPanel{padding:4px}.table{gap:4px}}
 
-/* v0.7.0-beta mobile match-over header fit */
+/* v0.8.0 mobile match-over header fit */
 .handReport{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .handReport .pill{min-width:0;overflow-wrap:anywhere}
 .handReport .quick{min-width:0}
@@ -32,7 +32,7 @@
   .handReport li{margin:1px 0}
 }
 
-/* v0.7.0-beta: prevent the match-over control from colliding with the title on iPhone */
+/* v0.8.0: prevent the match-over control from colliding with the title on iPhone */
 .app.matchOver #newHandBtn{background:#ffd365;color:#111;opacity:1;filter:none}
 @media (max-width:520px){
   .topbar{grid-template-columns:minmax(0,1fr) auto auto auto}
@@ -51,7 +51,7 @@
   .app.matchOver .title{max-width:112px}
 }
 
-/* v0.7.0-beta: rule coach / renege teaching */
+/* v0.8.0: rule coach / renege teaching */
 .ruleCoach{border:1px solid rgba(255,211,101,.34);background:rgba(255,211,101,.10);border-radius:12px;padding:7px 9px;margin:6px 3px 0;color:#eafff8;font-size:13px;line-height:1.22;font-weight:800}
 .ruleCoach b{color:var(--gold)}
 .ruleCoach.warn{border-color:rgba(239,71,111,.55);background:rgba(239,71,111,.14)}
@@ -60,6 +60,15 @@
 .card.illegal:after{content:"🔒";position:absolute;right:4px;bottom:4px;font-size:15px;opacity:.9}
 @media (max-width:520px){.ruleCoach{font-size:12px;padding:6px 8px;margin-top:4px}.card.illegal:after{font-size:13px}}
 .card.special,.played.special{box-shadow:0 0 0 2px rgba(255,211,101,.75),0 4px 12px rgba(0,0,0,.45)}
+
+.matchReport{border:1px solid rgba(255,211,101,.55);background:linear-gradient(135deg,rgba(255,211,101,.14),rgba(255,255,255,.06));border-radius:16px;padding:12px;margin:8px 0;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.matchReport .bigTitle{font-size:24px;font-weight:1000;color:#ffd365;letter-spacing:-.03em}
+.matchReport .winnerLine{font-size:18px;font-weight:950;margin:4px 0 8px}
+.matchStats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:8px 0}
+.matchStat{background:rgba(255,255,255,.08);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.08)}
+.matchStat span{display:block;color:#b8d5ca;font-size:12px}.matchStat b{font-size:18px;color:#f3fff9}
+@media(max-width:520px){.matchReport .bigTitle{font-size:20px}.matchStats{grid-template-columns:1fr 1fr}.matchStat b{font-size:16px}}
+
 </style>
 
 
@@ -76,11 +85,26 @@
 @media(max-width:520px){.contractBar{grid-template-columns:1fr;font-size:11px;padding:5px 8px}.contractPill{padding:5px 7px}.progressGrid{grid-template-columns:1fr}.miniBar{grid-template-columns:72px 1fr 34px}}
 </style>
 
+
+<style id="trickster-v080-css">
+.testGrid{display:grid;gap:7px;margin-top:8px}
+.testRow{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:12px;padding:8px}
+.testIcon{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;font-weight:1000}
+.testPass .testIcon{background:#1c6b4d;color:#d8ffe8}.testFail .testIcon{background:#772c3c;color:#ffe1e7}
+.testName{font-weight:950}.testDetail{font-size:12px;color:#b8d5ca;margin-top:2px;line-height:1.25}
+.auditCard{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:13px;padding:10px;margin:8px 0}
+.auditCard b{color:#ffd365}.auditMeta{font-size:12px;color:#b8d5ca;line-height:1.25}
+.replayControls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}.replayControls button{border:0;border-radius:12px;padding:11px;font-weight:950;background:#ffd365;color:#061c15}
+.replayTitle{font-size:19px;font-weight:1000;color:#ffd365;margin-bottom:6px}.replayPlays{line-height:1.5}.replayCoach{margin-top:8px;padding:8px;border-radius:12px;background:rgba(255,211,101,.11);border:1px solid rgba(255,211,101,.35)}
+.snapshotBlock{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.25;background:#031b14;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:10px;max-height:310px;overflow:auto;margin-top:8px}
+.trustBadge{display:inline-block;border:1px solid rgba(255,211,101,.45);border-radius:999px;padding:2px 8px;font-size:11px;color:#ffd365;font-weight:950;margin-left:6px}
+</style>
+
 </head>
 <body>
 <div id="app" class="app bidding">
   <header class="topbar">
-    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.7.0-beta</span></div></div>
+    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.8.0</span></div></div>
     <button id="newHandBtn" class="btn gold">New Hand</button>
     <button id="hintBtn" class="btn light">Hint</button>
     <button id="menuBtn" class="btn dark menu">☰ Menu</button>
@@ -120,7 +144,7 @@ const red=new Set(['♦','♥']);
 const RULESETS={
   standard:{key:'standard',name:'Standard Spades',short:'Standard',removed:[],jokers:false,explain:'Standard 52-card Spades. No jokers. A♠ is the highest trump, then K♠ down to 2♠. This is the common app/tournament-style preset.'},
   joker:{key:'joker',name:'Joker-Joker',short:'Joker-Joker',removed:['2♣','2♦'],jokers:true,explain:'Joker-Joker adds Big Joker and Little Joker as the two highest trump cards. This preset removes 2♣ and 2♦ to keep a 52-card deck. Trump order: Big Joker, Little Joker, A♠, K♠ ... 2♠.'},
-  jjdd:{key:'jjdd',name:'Joker-Joker-Deuce-Deuce',short:'JJDD',removed:['2♣','2♥'],jokers:true,explain:'Joker-Joker-Deuce-Deuce adds Big Joker and Little Joker and makes 2♠ and 2♦ special high trump cards. This preset removes 2♣ and 2♥ to keep 52 cards. Trump order: Big Joker, Little Joker, 2♠, 2♦, A♠, K♠ ... 3♠. House rules vary, so this is a practical training preset.'}
+  jjdd:{key:'jjdd',name:'Joker-Joker-Deuce-Deuce',short:'JJDD',removed:['2♣','2♥'],jokers:true,explain:'Joker-Joker-Deuce-Deuce adds Big Joker and Little Joker and makes only 2♠ a special high deuce trump. 2♦ stays a normal diamond. This preset removes 2♣ and 2♥ to keep 52 cards. Trump order: Big Joker, Little Joker, 2♠, A♠, K♠ ... 3♠. House rules vary, so this follows your table rules.'}
 };
 let currentMode=localStorage.getItem('tricksterRuleMode')||'standard';
 if(!RULESETS[currentMode])currentMode='standard';
@@ -147,10 +171,10 @@ fresh();
 function card(rank,suit,extra={}){return {rank,suit,id:(extra.id||rank+suit),label:(extra.label||rank),joker:!!extra.joker,name:(extra.name||rank+suit)}}
 function deck(){let d=[];const remove=new Set(ruleset().removed);for(const s of suits){for(const r of ranks){const id=r+s;if(!remove.has(id))d.push(card(r,s));}}if(ruleset().jokers){d.push(card('BJ','🃏',{id:'BJ',label:'BJ',joker:true,name:'Big Joker'}));d.push(card('LJ','🃏',{id:'LJ',label:'LJ',joker:true,name:'Little Joker'}));}return d}
 function normalRankValue(c){return ranks.indexOf(c.rank)+2}
-function isSpecialTrump(c){return c.joker||(currentMode==='jjdd'&&(c.id==='2♠'||c.id==='2♦'))}
-function isTrump(c){return c.joker||c.suit==='♠'||(currentMode==='jjdd'&&c.id==='2♦')}
+function isSpecialTrump(c){return c.joker||(currentMode==='jjdd'&&c.id==='2♠')}
+function isTrump(c){return c.joker||c.suit==='♠'}
 function effectiveSuit(c){return isTrump(c)?'♠':c.suit}
-function trumpPower(c){if(c.id==='BJ')return 100;if(c.id==='LJ')return 99;if(currentMode==='jjdd'&&c.id==='2♠')return 98;if(currentMode==='jjdd'&&c.id==='2♦')return 97;if(c.suit==='♠')return normalRankValue(c);return normalRankValue(c)}
+function trumpPower(c){if(c.id==='BJ')return 100;if(c.id==='LJ')return 99;if(currentMode==='jjdd'&&c.id==='2♠')return 98;if(c.suit==='♠')return normalRankValue(c);return normalRankValue(c)}
 function val(c){return isTrump(c)?trumpPower(c):normalRankValue(c)}
 function displayCard(c){return c.joker?c.name:c.id}
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
@@ -161,13 +185,13 @@ function suitName(s){return {'♣':'clubs','♦':'diamonds','♥':'hearts','♠'
 function legal(hand){if(state.trick.length===0){if(!state.spadesBroken){const non=hand.filter(c=>!isTrump(c));return non.length?non:hand}return hand}const led=effectiveSuit(state.trick[0].card);const follow=hand.filter(c=>effectiveSuit(c)===led);return follow.length?follow:hand}
 function legalReason(card,hand=state.hands.S){if(state.trick.length===0){if(isTrump(card)&&!state.spadesBroken&&hand.some(c=>!isTrump(c)))return 'Trump/spades have not been broken. Lead a non-trump card unless your hand is all trump.';return ''}const led=effectiveSuit(state.trick[0].card);const follow=hand.filter(c=>effectiveSuit(c)===led);if(follow.length&&effectiveSuit(card)!==led)return `Illegal renege: ${suitName(led)} were led and you still have ${follow.length} ${suitName(led)} card(s). You must follow suit.`;return ''}
 function specialList(hand){return hand.filter(isSpecialTrump).map(displayCard)}
-function modeCoachLine(){const rs=ruleset();if(currentMode==='standard')return 'Standard mode: no jokers; A♠ is highest trump.';if(currentMode==='joker')return 'Joker-Joker mode: Big Joker and Little Joker are the top two trump cards.';return 'JJDD mode: Big Joker, Little Joker, 2♠, and 2♦ are special high trump cards.'}
-function ruleCoachText(){if(state.phase!=='play'||state.turn!=='S'||!state.hands.S.length)return '';const h=state.hands.S,l=legal(h);const specials=specialList(h);let extra=specials.length?` Special trump in your hand: <b>${specials.join(', ')}</b>.`:'';if(state.trick.length===0){if(!state.spadesBroken&&l.length<h.length)return `<b>Lead rule:</b> trump/spades are locked until broken. Lead any highlighted non-trump card.${extra}`;return `<b>Lead:</b> you may lead any highlighted card.${extra}`}const led=effectiveSuit(state.trick[0].card);if(l.length<h.length)return `<b>Follow suit: ${suitName(led)}.</b> You have ${l.length} ${suitName(led)} card(s), so every other suit is locked. Playing a spade, joker, deuce-trump, or off-suit card here would be a renege.${extra}`;return `<b>Void in ${suitName(led)}.</b> You have no ${suitName(led)}, so you may play any highlighted card, including trump.${extra}`}
+function modeCoachLine(){const rs=ruleset();if(currentMode==='standard')return 'Standard mode: no jokers; A♠ is highest trump.';if(currentMode==='joker')return 'Joker-Joker mode: Big Joker and Little Joker are the top two trump cards.';return 'JJDD mode: Big Joker, Little Joker, and 2♠ are special high trump cards. 2♦ is a normal diamond.'}
+function ruleCoachText(){if(state.phase!=='play'||state.turn!=='S'||!state.hands.S.length)return '';const h=state.hands.S,l=legal(h);const specials=specialList(h);let extra=specials.length?` Special trump in your hand: <b>${specials.join(', ')}</b>.`:'';if(state.trick.length===0){if(!state.spadesBroken&&l.length<h.length)return `<b>Lead rule:</b> trump/spades are locked until broken. Lead any highlighted non-trump card.${extra}`;return `<b>Lead:</b> you may lead any highlighted card.${extra}`}const led=effectiveSuit(state.trick[0].card);if(l.length<h.length)return `<b>Follow suit: ${suitName(led)}.</b> You have ${l.length} ${suitName(led)} card(s), so every other suit is locked. Playing a spade, joker, special trump, or off-suit card here would be a renege.${extra}`;return `<b>Void in ${suitName(led)}.</b> You have no ${suitName(led)}, so you may play any highlighted card, including trump.${extra}`}
 function beats(a,b){const at=isTrump(a),bt=isTrump(b);if(at&&!bt)return true;if(!at&&bt)return false;if(effectiveSuit(a)!==effectiveSuit(b))return false;return val(a)>val(b)}
 function trickWinner(){let best=state.trick[0];for(const play of state.trick.slice(1))if(beats(play.card,best.card))best=play;return best.player}
 function lowFirst(cards){return cards.slice().sort((a,b)=>val(a)-val(b))}
 function highFirst(cards){return cards.slice().sort((a,b)=>val(b)-val(a))}
-function estimateBid(hand){let bid=0;for(const c of hand){if(c.joker)bid+=1.1;else if(currentMode==='jjdd'&&(c.id==='2♠'||c.id==='2♦'))bid+=1;else if(c.suit==='♠'&&['A','K','Q','J','10'].includes(c.rank))bid+=.75;else if(c.rank==='A'&&!isTrump(c))bid+=1;else if(c.rank==='K'&&!isTrump(c))bid+=.25}const suitsHeld={};for(const s of suits)suitsHeld[s]=hand.filter(c=>!isTrump(c)&&c.suit===s).length;bid+=Object.values(suitsHeld).filter(n=>n<=1).length*.35;return Math.max(1,Math.min(8,Math.round(bid)))}
+function estimateBid(hand){let bid=0;for(const c of hand){if(c.joker)bid+=1.1;else if(currentMode==='jjdd'&&c.id==='2♠')bid+=1;else if(c.suit==='♠'&&['A','K','Q','J','10'].includes(c.rank))bid+=.75;else if(c.rank==='A'&&!isTrump(c))bid+=1;else if(c.rank==='K'&&!isTrump(c))bid+=.25}const suitsHeld={};for(const s of suits)suitsHeld[s]=hand.filter(c=>!isTrump(c)&&c.suit===s).length;bid+=Object.values(suitsHeld).filter(n=>n<=1).length*.35;return Math.max(1,Math.min(8,Math.round(bid)))}
 function bidRead(){const h=state.hands.S;const aces=h.filter(c=>c.rank==='A'&&!isTrump(c)).length;const tr=h.filter(isTrump).length;const specials=specialList(h);const counts=suits.map(s=>h.filter(c=>!isTrump(c)&&c.suit===s).length);const shorts=counts.filter(n=>n<=1).length;const b=estimateBid(h);let specialText=specials.length?` Special power cards: <b>${specials.join(', ')}</b>.`:'';return `<b>Bidding read:</b> ${modeCoachLine()} You have ${aces} non-trump ace(s), ${tr} trump card(s), and ${shorts} short side suit(s).${specialText} Reasonable bid: <b>${b}</b>.`}
 function startHand(){if(state.matchOver){toast('Match is over. Use Menu → Reset match.');return}track('Started hand');state.handNo++;state.phase='bidding';state.trick=[];state.tricks={S:0,W:0,N:0,E:0};state.bids={S:null,W:null,N:null,E:null};state.turn='S';state.leader='S';state.spadesBroken=false;let d=shuffle(deck());for(const p of players)state.hands[p]=[];for(let i=0;i<d.length;i++)state.hands[players[i%4]].push(d[i]);for(const p of players)sortHand(state.hands[p]);const h=state.hands.S;const counts=suits.map(s=>h.filter(c=>!isTrump(c)&&c.suit===s).length);state.trickHistory=[];state.lastAINote='';state.handStats={legalPlays:0,reneges:0,blockedIllegalClicks:0,humanPlays:[],recommendedBid:estimateBid(h),startTrumps:h.filter(isTrump).length,startAces:h.filter(c=>c.rank==='A'&&!isTrump(c)).length,startShorts:counts.filter(n=>n<=1).length,startSpecials:specialList(h)};state.lastReport='';state.stickyLog='';state.lastAINote='';state.log='Choose your bid using the bid buttons above.';state.selected=null;render()}
 function bid(n){if(state.phase!=='bidding')return;state.bids.S=n;state.bids.W=estimateBid(state.hands.W);state.bids.N=estimateBid(state.hands.N);state.bids.E=estimateBid(state.hands.E);state.phase='play';state.turn='S';state.leader='S';state.stickyLog='';state.log=`You bid ${n}. Play a card to lead. ${modeCoachLine()}`;render()}
@@ -369,7 +393,7 @@ render();
 
 <script id="trickster-v070-upgrade">
 (function(){
-  const VERSION='v0.7.0-beta';
+  const VERSION='v0.8.0';
   const CF_TOKEN='bcf3c824273d481db353b0cb79755b37';
 
   // Visible beta/version polish.
@@ -428,7 +452,7 @@ render();
     s.totalBags+=g.teamBags;
     s.illegalTapsBlocked+=(state.handStats.blockedIllegalClicks||0);
     s.gradeTotal+=g.overall;
-    s.bestGrade=s.bestGrade==='—'?g.grade:s.bestGrade;
+    if(!s.bestGradeScore||g.overall>s.bestGradeScore){s.bestGradeScore=g.overall;s.bestGrade=g.grade}
     s.currentMadeStreak=ns.made?s.currentMadeStreak+1:0;
     s.bestMadeStreak=Math.max(s.bestMadeStreak,s.currentMadeStreak);
     s.ruleUsage[currentMode]=(s.ruleUsage[currentMode]||0)+1;
@@ -506,6 +530,43 @@ render();
     return html.replace('</div>`','</div>`') + `<div class="lessonBox"><b>${lesson.title}</b><br>${lesson.body}${bars}</div>`;
   };
 
+
+  function matchReportHTML(ns,ew,g){
+    const nsWon=state.scores.NS>state.scores.EW;
+    const winner=nsWon?'North/South':'East/West';
+    const s=initStats();
+    const finalBags=state.bags.NS;
+    let score=g.overall;
+    if(nsWon)score=Math.max(score,90);else score=Math.min(score,74);
+    if(finalBags<=2)score+=3;
+    if(finalBags>=7)score-=7;
+    if(Math.abs(state.scores.NS-state.scores.EW)>=150&&nsWon)score+=2;
+    score=Math.max(40,Math.min(100,Math.round(score)));
+    const mGrade=ratingLabel(score);
+    const best=s.bestGrade&&s.bestGrade!=='—'?s.bestGrade:g.grade;
+    let strength='Contract discipline';
+    if(finalBags<=2&&nsWon)strength='Contract discipline and bag control';
+    if(g.exactTeam)strength='Exact contract control';
+    let focus='Avoid late-match bags';
+    if(!nsWon)focus='Protect sure tricks and reduce missed contracts';
+    else if(finalBags===0)focus='Keep tracking boss trump and partner winners';
+    else if(finalBags>=7)focus='Avoid late-match bags before the 10-bag penalty';
+    return `<div class="matchReport">
+      <div class="bigTitle">♠ Match Complete</div>
+      <div class="winnerLine">${winner} wins!</div>
+      <div class="matchStats">
+        <div class="matchStat"><span>Final Score</span><b>${state.scores.NS}–${state.scores.EW}</b></div>
+        <div class="matchStat"><span>Match Grade</span><b>${mGrade}</b></div>
+        <div class="matchStat"><span>Hands Played</span><b>${state.handNo}</b></div>
+        <div class="matchStat"><span>Best Hand</span><b>${best}</b></div>
+        <div class="matchStat"><span>Total Bags</span><b>${finalBags}</b></div>
+        <div class="matchStat"><span>Rule Set</span><b>${ruleset().short}</b></div>
+      </div>
+      <div class="lessonBox"><b>Biggest Strength:</b><br>${strength}</div>
+      <div class="lessonBox"><b>Next Focus:</b><br>${focus}</div>
+    </div>`;
+  }
+
   scoreHand=function(){
     const ns=scoreTeam('NS');
     const ew=scoreTeam('EW');
@@ -521,7 +582,7 @@ render();
       saveStats(s);
       track('Completed match',{winner:state.scores.NS>state.scores.EW?'NS':'EW'});
       state.matchOver=true;
-      state.log=state.lastReport+`<div class="handReport"><div class="headline">${state.scores.NS>state.scores.EW?'North/South':'East/West'} wins the match. Use Menu → Reset match.</div></div>`;
+      state.log=matchReportHTML(ns,ew,g)+state.lastReport+`<div class="endHint">Match is over. Use Menu → Reset match.</div>`;
     }
     render();
   };
@@ -554,7 +615,7 @@ render();
       {title:'Protect partner',prompt:'South is winning with K♥. North has 3♥ and A♥. What should North play?',choices:['A♥ to secure it','3♥ to protect South','Cut with trump'],answer:1,why:'North should play the safe low heart. Do not overtake your partner unless forced.'},
       {title:'Avoid the bag',prompt:'Your team bid 6 and already has 6 books. You can win with A♣ or duck with 7♣. What is the training answer?',choices:['Win with A♣','Duck with 7♣','Cut with trump'],answer:1,why:'Once the contract is safe, avoid unnecessary bags when it is safe to duck.'},
       {title:'Follow suit',prompt:'Clubs were led. You still have 4♣ and several spades. What is legal?',choices:['Play a spade','Play 4♣','Play any card'],answer:1,why:'You must follow suit when possible. Playing a spade while holding clubs would be a renege.'},
-      {title:'Card-counting check',prompt:'Big Joker, Little Joker, and 2♠ are gone in JJDD. What is now the boss trump?',choices:['A♠','2♦','K♠'],answer:1,why:'In JJDD, 2♦ is below 2♠ but above A♠. If the top three are gone, 2♦ is boss.'}
+      {title:'Card-counting check',prompt:'Big Joker, Little Joker, and 2♠ are gone in JJDD. What is now the boss trump?',choices:['A♠','2♦','K♠'],answer:0,why:'In your JJDD rules, 2♦ is not trump. Once Big Joker, Little Joker, and 2♠ are gone, A♠ is boss trump.'}
     ];
     const sc=scenarios[seed%scenarios.length];
     const buttons=sc.choices.map((c,i)=>`<button class="challengeChoice" onclick="answerDaily(${i},${sc.answer},'${encodeURIComponent(sc.why)}')">${c}</button>`).join('');
@@ -632,6 +693,280 @@ Describe what looked wrong here.`;
   const oldRulesHTML=rulesHTML;
   rulesHTML=function(){return oldRulesHTML()+`<br><br><b>Training upgrades</b><br>Team contract status is shown during play. Trick history and replay notes are available in Menu. Card-counting mode extends the trick pause. Blocked accidental taps are teaching events only, not penalties.`};
   appNotes=function(){document.getElementById('coachText').innerHTML=publicBetaHTML();openSheet('coachSheet')};
+
+  render();
+})();
+</script>
+
+
+<script id="trickster-v080-trust-testing">
+(function(){
+  const VERSION='v0.8.0';
+  const ver=document.querySelector('.ver'); if(ver) ver.textContent=VERSION;
+  const title=document.querySelector('.title');
+  if(title && !title.querySelector('.trustBadge')) title.insertAdjacentHTML('beforeend','<span class="trustBadge">TRUST TESTED</span>');
+
+  function esc(s){return String(s??'').replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}
+  function ensureTrustState(){
+    if(!state)return;
+    if(!state.aiAudit)state.aiAudit=[];
+    if(!state.testResults)state.testResults=[];
+    if(!state.replayIndex)state.replayIndex=0;
+  }
+  ensureTrustState();
+
+  function addMenuButton(id,label,afterId){
+    if(document.getElementById(id))return;
+    const after=document.getElementById(afterId);
+    const b=document.createElement('button'); b.id=id; b.textContent=label;
+    if(after&&after.parentNode)after.parentNode.insertBefore(b,after.nextSibling);
+  }
+  addMenuButton('testsBtn','Trust tests','historyBtn');
+  addMenuButton('replayBtn','Trick replay','testsBtn');
+  addMenuButton('auditBtn','AI audit','replayBtn');
+
+  // Ensure each new hand starts with clean audit/replay state.
+  const baseStartHand=startHand;
+  startHand=function(){
+    baseStartHand();
+    ensureTrustState();
+    state.aiAudit=[];
+    state.replayIndex=0;
+    render();
+  };
+  const newHandBtn=document.getElementById('newHandBtn'); if(newHandBtn)newHandBtn.onclick=startHand;
+
+  function cloneCards(cards){return (cards||[]).map(displayCard)}
+  function legalNames(cards){return (cards||[]).map(displayCard).join(', ')||'none'}
+  function auditNorthPlay(before,legalBefore,chosen,note){
+    ensureTrustState();
+    const safeCards=before?legalBefore.filter(c=>!beats(c,before.card)):[];
+    const forced=before&&before.player==='S'&&beats(chosen,before.card)&&safeCards.length===0;
+    const bad=before&&before.player==='S'&&beats(chosen,before.card)&&safeCards.length>0;
+    const entry={
+      no:state.aiAudit.length+1,
+      hand:state.handNo,
+      trick:(state.trickHistory?.length||0)+1,
+      before:before?`${names[before.player]} ${displayCard(before.card)}`:'North led',
+      legal:cloneCards(legalBefore),
+      safe:cloneCards(safeCards),
+      chosen:displayCard(chosen),
+      note:note||'',
+      forced:!!forced,
+      warning:!!bad,
+      phase:state.phase,
+      mode:ruleset().short
+    };
+    state.aiAudit.push(entry);
+    return entry;
+  }
+
+  // Override AI loop to capture audit data before card is removed from North's hand.
+  aiLoop=function(){
+    if(state.phase!=='play'||state.turn==='S')return;
+    ensureTrustState();
+    const p=state.turn;
+    state.log=`${names[p]} is thinking…`;
+    render();
+    setTimeout(()=>{
+      const before=currentWinnerPlay();
+      const legalBefore=legal(state.hands[p]);
+      const c=aiChoose(p);
+      let note='';
+      if(p==='N')note=explainNorthPlay(before,legalBefore,c);
+      let audit=null;
+      if(p==='N')audit=auditNorthPlay(before,legalBefore,c,note);
+      playCard(p,c);
+      let special=isSpecialTrump(c)?` <b>${displayCard(c)}</b> is special trump in ${ruleset().short} mode.`:'';
+      if(p==='N'&&note)state.lastAINote=note+(audit?.warning?' ⚠️ Audit warning: a safe card existed.':'');
+      state.log=`${names[p]} played ${displayCard(c)}.${special}${note?' '+note:''}`;
+      afterPlay();
+    },420);
+  };
+
+  // Add stronger forced/not-forced verification into trick history entries.
+  const baseRecordTrickHistory=recordTrickHistory;
+  recordTrickHistory=function(w){
+    baseRecordTrickHistory(w);
+    ensureTrustState();
+    const last=state.trickHistory[state.trickHistory.length-1];
+    if(last){
+      const audits=state.aiAudit.filter(a=>a.trick===last.no);
+      if(audits.length){
+        const a=audits[audits.length-1];
+        last.audit=`North audit: chose ${a.chosen}. ${a.warning?'A safe card existed — review this hand.':a.forced?'North was forced.':'North was not forced and protected correctly when applicable.'}`;
+        if(last.coach)last.coach += ' ' + last.audit; else last.coach=last.audit;
+      }
+    }
+  };
+
+  function cardObj(id){
+    if(id==='BJ')return {rank:'BJ',suit:'🃏',id:'BJ',label:'BJ',joker:true,name:'Big Joker'};
+    if(id==='LJ')return {rank:'LJ',suit:'🃏',id:'LJ',label:'LJ',joker:true,name:'Little Joker'};
+    const rank=id.slice(0,-1), suit=id.slice(-1);
+    return {rank,suit,id,label:rank,joker:false,name:id};
+  }
+  function withMode(mode,fn){
+    const old=currentMode;
+    currentMode=mode;
+    try{return fn()}finally{currentMode=old}
+  }
+  function runTrustTests(){
+    const tests=[];
+    function test(name,fn,detail=''){
+      try{
+        const ok=!!fn();
+        tests.push({name,ok,detail:ok?(detail||'Passed'):(detail||'Failed')});
+      }catch(e){tests.push({name,ok:false,detail:e.message||String(e)})}
+    }
+    test('JJDD: 2♦ is not trump',()=>withMode('jjdd',()=>!isTrump(cardObj('2♦'))),'2♦ should behave as a normal diamond.');
+    test('JJDD: 2♠ beats A♠',()=>withMode('jjdd',()=>beats(cardObj('2♠'),cardObj('A♠'))),'2♠ is the only deuce power card in your JJDD rules.');
+    test('JJDD: A♠ beats K♠ after 2♠',()=>withMode('jjdd',()=>beats(cardObj('A♠'),cardObj('K♠'))),'Normal spade order still applies below 2♠.');
+    test('Joker order: Big Joker beats Little Joker',()=>withMode('jjdd',()=>beats(cardObj('BJ'),cardObj('LJ'))),'Big Joker should be top trump.');
+    test('Little Joker beats 2♠',()=>withMode('jjdd',()=>beats(cardObj('LJ'),cardObj('2♠'))),'Little Joker should be above 2♠.');
+    test('Follow suit blocks renege',()=>{
+      const oldTrick=state.trick, oldPhase=state.phase;
+      state.phase='play'; state.trick=[{player:'W',card:cardObj('9♣')}];
+      const hand=[cardObj('4♣'),cardObj('A♠')];
+      const ok=legal(hand).length===1&&legal(hand)[0].id==='4♣'&&legalReason(cardObj('A♠'),hand).includes('Illegal renege');
+      state.trick=oldTrick; state.phase=oldPhase;
+      return ok;
+    },'If clubs are led and you have clubs, spades are illegal.');
+    test('Spades cannot be led until broken',()=>{
+      const oldTrick=state.trick, oldBroken=state.spadesBroken;
+      state.trick=[]; state.spadesBroken=false;
+      const hand=[cardObj('4♣'),cardObj('A♠')];
+      const ok=legal(hand).length===1&&legal(hand)[0].id==='4♣';
+      state.trick=oldTrick; state.spadesBroken=oldBroken;
+      return ok;
+    },'Lead a non-trump card before spades/trump are broken.');
+    test('Score: bid 7 take 8 = +71 and 1 bag',()=>{
+      const oldB=state.bids, oldT=state.tricks, oldS=state.scores, oldBags=state.bags;
+      state.bids={S:3,N:4,W:0,E:0}; state.tricks={S:3,N:5,W:0,E:0}; state.scores={NS:0,EW:0}; state.bags={NS:0,EW:0};
+      const r=scoreTeam('NS');
+      const ok=r.delta===71&&state.bags.NS===1;
+      state.bids=oldB; state.tricks=oldT; state.scores=oldS; state.bags=oldBags;
+      return ok;
+    },'Standard contract scoring with one bag.');
+    test('North protects South winner when safe card exists',()=>{
+      const oldTrick=state.trick, oldHands=state.hands;
+      state.trick=[{player:'S',card:cardObj('Q♥')},{player:'W',card:cardObj('4♥')}];
+      state.hands={...state.hands,N:[cardObj('3♥'),cardObj('A♥')]};
+      const choice=aiChoose('N');
+      const ok=choice.id==='3♥';
+      state.trick=oldTrick; state.hands=oldHands;
+      return ok;
+    },'North should play 3♥ under your Q♥, not A♥.');
+    test('North forced explanation when no safe card exists',()=>{
+      const before={player:'S',card:cardObj('Q♥')};
+      const legalBefore=[cardObj('A♥')];
+      const note=explainNorthPlay(before,legalBefore,cardObj('A♥'));
+      return note.includes('forced');
+    },'If North only has A♥, the coach should explain the forced overtake.');
+    state.testResults=tests;
+    return tests;
+  }
+  function testsHTML(){
+    const results=runTrustTests();
+    const pass=results.filter(t=>t.ok).length;
+    const rows=results.map(t=>`<div class="testRow ${t.ok?'testPass':'testFail'}"><div class="testIcon">${t.ok?'✓':'!'}</div><div><div class="testName">${esc(t.name)}</div><div class="testDetail">${esc(t.detail)}</div></div></div>`).join('');
+    return `<b>Trust tests</b><br><span class="smallNote">${pass}/${results.length} tests passing. Run this after every new build before sharing.</span><div class="testGrid">${rows}</div>`;
+  }
+
+  function replayHTML(index){
+    const hist=state.trickHistory||[];
+    if(!hist.length)return '<b>Trick replay</b><br>No completed tricks yet.';
+    state.replayIndex=Math.max(0,Math.min(index,hist.length-1));
+    const t=hist[state.replayIndex];
+    const plays=t.plays.map(p=>`<div>${esc(names[p.player])}: <b>${esc(p.card)}</b></div>`).join('');
+    return `<b>Trick replay</b>
+      <div class="replayControls"><button onclick="replayStep(-1)">← Previous</button><button onclick="replayStep(1)">Next →</button></div>
+      <div class="auditCard"><div class="replayTitle">Trick ${t.no} — ${esc(names[t.winner])} won</div>
+      <div class="auditMeta">Led suit: ${esc(suitName(t.led)||t.led)} · Showing ${state.replayIndex+1} of ${hist.length}</div>
+      <div class="replayPlays">${plays}</div>
+      ${t.coach?`<div class="replayCoach"><b>Coach:</b> ${esc(t.coach)}</div>`:''}</div>`;
+  }
+  window.replayStep=function(delta){
+    document.getElementById('coachText').innerHTML=replayHTML((state.replayIndex||0)+delta);
+  };
+
+  function auditHTML(){
+    ensureTrustState();
+    const audits=state.aiAudit||[];
+    if(!audits.length)return '<b>AI decision audit</b><br>No North decisions recorded yet. Play a few tricks first.';
+    const rows=audits.slice().reverse().map(a=>`<div class="auditCard">
+      <b>Hand ${a.hand}, Trick ${a.trick}: North chose ${esc(a.chosen)}</b>
+      <div class="auditMeta">Before: ${esc(a.before)}<br>Legal: ${esc(a.legal.join(', ')||'none')}<br>Safe under winner: ${esc(a.safe.join(', ')||'none')}<br>Status: ${a.warning?'⚠️ Review — safe card existed':a.forced?'Forced play':'Normal/protected play'}</div>
+      ${a.note?`<div class="replayCoach">${esc(a.note)}</div>`:''}
+    </div>`).join('');
+    return `<b>AI decision audit</b><br><span class="smallNote">This explains North's choices and verifies whether North was forced.</span>${rows}`;
+  }
+
+  function fullSnapshot(){
+    const visibleHands = {
+      you: cloneCards(state.hands.S),
+      north_cards_remaining: state.hands.N?.length,
+      west_cards_remaining: state.hands.W?.length,
+      east_cards_remaining: state.hands.E?.length
+    };
+    const current = (state.trick||[]).map(t=>`${names[t.player]} ${displayCard(t.card)}`).join(' | ')||'none';
+    const tricks=(state.trickHistory||[]).map(t=>`Trick ${t.no}: ${t.plays.map(p=>`${names[p.player]} ${p.card}`).join(' | ')} -> ${names[t.winner]}${t.coach?`\nCoach: ${t.coach}`:''}`).join('\n');
+    const audits=(state.aiAudit||[]).map(a=>`North audit H${a.hand}T${a.trick}: chose ${a.chosen}; before=${a.before}; legal=${a.legal.join(',')}; safe=${a.safe.join(',')}; forced=${a.forced}; warning=${a.warning}; note=${a.note}`).join('\n');
+    return `Trickster AI exact-hand report
+Version: ${VERSION}
+Rule set: ${ruleset().name}
+URL mode: ${ruleset().short}
+Score: NS ${state.scores.NS} (${state.bags.NS} bags) | EW ${state.scores.EW} (${state.bags.EW} bags)
+Hand: ${state.handNo}
+Phase: ${state.phase}
+Turn: ${names[state.turn]}
+Bids: You ${state.bids.S??'-'}, West ${state.bids.W??'-'}, North ${state.bids.N??'-'}, East ${state.bids.E??'-'}
+Tricks: You ${state.tricks.S}, West ${state.tricks.W}, North ${state.tricks.N}, East ${state.tricks.E}
+Current trick: ${current}
+Visible/current hand info: ${JSON.stringify(visibleHands)}
+Legal cards for you now: ${state.hands.S?.length?legalNames(legal(state.hands.S)):'none'}
+Blocked illegal taps: ${state.handStats.blockedIllegalClicks||0}
+
+Completed tricks:
+${tricks||'none'}
+
+AI audit:
+${audits||'none'}
+
+Issue:
+Describe what looked wrong.`;
+  }
+
+  // Upgrade the existing feedback function by rebinding the button.
+  async function trustFeedbackHTML(){
+    const txt=fullSnapshot();
+    let copied=false;
+    try{await navigator.clipboard.writeText(txt);copied=true}catch(e){}
+    return `<b>Report this exact hand</b><br>${copied?'Copied the full hand snapshot to your clipboard.':'Copy this full snapshot and paste it into a GitHub issue or message.'}<div class="snapshotBlock">${esc(txt)}</div>`;
+  }
+
+  function bindTrustButtons(){
+    const testsBtn=document.getElementById('testsBtn');
+    if(testsBtn)testsBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=testsHTML();openSheet('coachSheet')};
+    const replayBtn=document.getElementById('replayBtn');
+    if(replayBtn)replayBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=replayHTML(state.replayIndex||0);openSheet('coachSheet')};
+    const auditBtn=document.getElementById('auditBtn');
+    if(auditBtn)auditBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=auditHTML();openSheet('coachSheet')};
+    const feedbackBtn=document.getElementById('feedbackBtn');
+    if(feedbackBtn)feedbackBtn.onclick=async()=>{closeSheets();document.getElementById('coachText').innerHTML=await trustFeedbackHTML();openSheet('coachSheet')};
+  }
+  bindTrustButtons();
+
+  const oldRulesHTML=rulesHTML;
+  rulesHTML=function(){return oldRulesHTML()+`<br><br><b>v0.8.0 Trust & Testing</b><br>Use Menu → Trust tests to verify scoring, follow-suit enforcement, JJDD trump order, and North protection logic. Use Trick replay and AI audit to review whether North was forced.`};
+
+  // Run tests once in console/local counters, but do not interrupt the player.
+  try{
+    const r=runTrustTests();
+    const failed=r.filter(x=>!x.ok).length;
+    if(failed)console.warn('Trickster AI trust tests failing:',r.filter(x=>!x.ok));
+    else console.info('Trickster AI trust tests passing:',r.length);
+  }catch(e){console.warn('Trust tests could not run',e)}
 
   render();
 })();
