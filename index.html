@@ -15,7 +15,7 @@
 @media (max-width:520px){.handReport .headline{font-size:16px}.handReport .quick{grid-template-columns:1fr 1fr}.handReport .pill{font-size:12px;padding:5px}.handReport ul{font-size:12px;margin-left:16px}}
 @media (max-height:720px) and (max-width:520px){.topbar{padding:6px 8px}.logo{width:32px;height:32px}.title{font-size:20px}.btn{padding:10px 9px;font-size:15px}.status{font-size:13px;padding:5px 10px}.bidGrid button{height:36px}.mobileBid{padding:6px 8px}.coachLine{display:none}.tableWrap{padding:6px}.player{padding:5px}.avatar{width:28px;height:28px}.pName{font-size:14px}.pMeta{font-size:10.5px}.message{font-size:14px}.hand{height:96px}.card{width:48px;height:76px}.felt:after{font-size:17px}.youPanel{padding:4px}.table{gap:4px}}
 
-/* v0.4.6 mobile match-over header fit */
+/* v0.7.0-beta mobile match-over header fit */
 .handReport{max-width:100%;overflow-wrap:anywhere;word-break:normal}
 .handReport .pill{min-width:0;overflow-wrap:anywhere}
 .handReport .quick{min-width:0}
@@ -32,7 +32,7 @@
   .handReport li{margin:1px 0}
 }
 
-/* v0.4.6: prevent the match-over control from colliding with the title on iPhone */
+/* v0.7.0-beta: prevent the match-over control from colliding with the title on iPhone */
 .app.matchOver #newHandBtn{background:#ffd365;color:#111;opacity:1;filter:none}
 @media (max-width:520px){
   .topbar{grid-template-columns:minmax(0,1fr) auto auto auto}
@@ -51,7 +51,7 @@
   .app.matchOver .title{max-width:112px}
 }
 
-/* v0.4.6: rule coach / renege teaching */
+/* v0.7.0-beta: rule coach / renege teaching */
 .ruleCoach{border:1px solid rgba(255,211,101,.34);background:rgba(255,211,101,.10);border-radius:12px;padding:7px 9px;margin:6px 3px 0;color:#eafff8;font-size:13px;line-height:1.22;font-weight:800}
 .ruleCoach b{color:var(--gold)}
 .ruleCoach.warn{border-color:rgba(239,71,111,.55);background:rgba(239,71,111,.14)}
@@ -65,11 +65,22 @@
 
 
 <!-- Cloudflare Web Analytics --><script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "bcf3c824273d481db353b0cb79755b37"}'></script><!-- End Cloudflare Web Analytics -->
+
+<style id="trickster-v070-css">
+.contractBar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;padding:6px 10px;background:rgba(4,30,22,.74);border-bottom:1px solid rgba(255,255,255,.07);font-size:12px;color:#d8eee6}
+.contractPill{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.10);border-radius:10px;padding:6px 8px;font-weight:850;line-height:1.15}
+.contractPill b{color:#ffd365}.contractPill.warn b{color:#ffb3c5}.contractPill.good b{color:#9ff3c9}
+.betaTag{font-size:10px;color:#ffd365;margin-left:4px;font-weight:900}
+.lessonBox{border:1px solid rgba(255,211,101,.35);background:rgba(255,211,101,.09);border-radius:12px;padding:8px;margin-top:7px}
+.lessonBox b{color:#ffd365}.miniBars{display:grid;gap:4px;margin-top:6px}.miniBar{display:grid;grid-template-columns:80px 1fr 42px;gap:6px;align-items:center;font-size:12px}.barTrack{height:8px;border-radius:99px;background:rgba(255,255,255,.12);overflow:hidden}.barFill{height:100%;background:#ffd365;border-radius:99px}.progressGrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin:10px 0}.progressCard{border-radius:13px;background:rgba(255,255,255,.07);padding:10px;border:1px solid rgba(255,255,255,.08)}.progressCard b{color:#ffd365;font-size:20px}.challengeChoice{display:block;width:100%;margin:8px 0;padding:12px;border:0;border-radius:13px;background:#184c3d;color:#f3fff9;text-align:left;font-weight:900}.challengeChoice.good{background:#1c6b4d}.challengeChoice.bad{background:#5b2633}.reportBox{white-space:pre-wrap;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;background:#031b14;border:1px solid rgba(255,255,255,.12);padding:10px;border-radius:12px;margin-top:8px;max-height:260px;overflow:auto}.smallNote{font-size:12px;color:#b8d5ca;line-height:1.25}.menuGrid .accentBtn{background:#ffd365;color:#061c15;text-align:center}
+@media(max-width:520px){.contractBar{grid-template-columns:1fr;font-size:11px;padding:5px 8px}.contractPill{padding:5px 7px}.progressGrid{grid-template-columns:1fr}.miniBar{grid-template-columns:72px 1fr 34px}}
+</style>
+
 </head>
 <body>
 <div id="app" class="app bidding">
   <header class="topbar">
-    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.4.6</span></div></div>
+    <div class="brand"><div class="logo">♠</div><div class="title">Trickster AI <span class="ver">v0.7.0-beta</span></div></div>
     <button id="newHandBtn" class="btn gold">New Hand</button>
     <button id="hintBtn" class="btn light">Hint</button>
     <button id="menuBtn" class="btn dark menu">☰ Menu</button>
@@ -355,5 +366,276 @@ window.addEventListener('resize',renderHand);
 track('Visited app',{referrer:document.referrer?'present':'none'});
 render();
 </script>
+
+<script id="trickster-v070-upgrade">
+(function(){
+  const VERSION='v0.7.0-beta';
+  const CF_TOKEN='bcf3c824273d481db353b0cb79755b37';
+
+  // Visible beta/version polish.
+  const ver=document.querySelector('.ver'); if(ver) ver.textContent=VERSION;
+  const title=document.querySelector('.title'); if(title && !title.querySelector('.betaTag')) title.insertAdjacentHTML('beforeend','<span class="betaTag">PUBLIC BETA BUILD</span>');
+
+  function ensureContractBar(){
+    if(document.getElementById('contractBar'))return;
+    const status=document.querySelector('.status');
+    if(status)status.insertAdjacentHTML('afterend','<div id="contractBar" class="contractBar"><div class="contractPill">Team contract appears after bidding.</div><div class="contractPill">Progress appears during play.</div><div class="contractPill">Coach mode ready.</div></div>');
+  }
+  ensureContractBar();
+
+  function addMenuButton(id,label,afterId){
+    if(document.getElementById(id))return;
+    const after=document.getElementById(afterId);
+    const b=document.createElement('button');
+    b.id=id;b.textContent=label;
+    if(after&&after.parentNode)after.parentNode.insertBefore(b,after.nextSibling);
+  }
+  addMenuButton('progressBtn','Player progress','historyBtn');
+  addMenuButton('dailyBtn','Daily practice','progressBtn');
+  addMenuButton('countModeBtn','Card-counting mode','dailyBtn');
+  addMenuButton('feedbackBtn','Report this hand','privacyBtn');
+  addMenuButton('betaBtn','Public beta checklist','feedbackBtn');
+
+  const oldTrack=track;
+  track=function(event,props={}){ try{oldTrack(event,props)}catch(e){} };
+
+  function todayKey(){return new Date().toISOString().slice(0,10)}
+  function loadStats(){try{return JSON.parse(localStorage.getItem('tricksterPlayerStats')||'{}')}catch(e){return {}}}
+  function saveStats(s){try{localStorage.setItem('tricksterPlayerStats',JSON.stringify(s))}catch(e){}}
+  function initStats(){
+    const s=loadStats();
+    s.hands=s.hands||0;s.matches=s.matches||0;s.wins=s.wins||0;s.losses=s.losses||0;
+    s.contractsMade=s.contractsMade||0;s.exactHands=s.exactHands||0;s.totalBags=s.totalBags||0;
+    s.gradeTotal=s.gradeTotal||0;s.bestGrade=s.bestGrade||'—';s.currentMadeStreak=s.currentMadeStreak||0;s.bestMadeStreak=s.bestMadeStreak||0;
+    s.illegalTapsBlocked=s.illegalTapsBlocked||0;s.ruleUsage=s.ruleUsage||{};s.dailyCompleted=s.dailyCompleted||{};s.cardCountingMode=!!s.cardCountingMode;
+    return s;
+  }
+  function gradePoints(g){return g>=97?100:g>=92?95:g>=88?90:g>=84?86:g>=80?82:g>=74?78:g>=68?72:g>=62?66:g>=55?58:40}
+  function skillLevel(avg,hands){
+    if(hands<5)return 'Rookie';
+    if(avg>=92&&hands>=25)return 'Expert';
+    if(avg>=86)return 'Advanced';
+    if(avg>=76)return 'Intermediate';
+    if(avg>=65)return 'Developing';
+    return 'Beginner';
+  }
+  function bar(v){v=Math.max(0,Math.min(100,Math.round(v)));return `<div class="barTrack"><div class="barFill" style="width:${v}%"></div></div><span>${v}</span>`}
+  function recordProgress(ns,g){
+    const s=initStats();
+    s.hands++;
+    if(ns.made)s.contractsMade++;
+    if(g.exactTeam)s.exactHands++;
+    s.totalBags+=g.teamBags;
+    s.illegalTapsBlocked+=(state.handStats.blockedIllegalClicks||0);
+    s.gradeTotal+=g.overall;
+    s.bestGrade=s.bestGrade==='—'?g.grade:s.bestGrade;
+    s.currentMadeStreak=ns.made?s.currentMadeStreak+1:0;
+    s.bestMadeStreak=Math.max(s.bestMadeStreak,s.currentMadeStreak);
+    s.ruleUsage[currentMode]=(s.ruleUsage[currentMode]||0)+1;
+    saveStats(s);
+  }
+
+  function contractStatusHTML(){
+    const nsBid=(state.bids.S||0)+(state.bids.N||0);
+    const nsTook=(state.tricks.S||0)+(state.tricks.N||0);
+    const ewBid=(state.bids.W||0)+(state.bids.E||0);
+    const ewTook=(state.tricks.W||0)+(state.tricks.E||0);
+    if(state.phase==='idle')return `<div class="contractPill">Start a hand to see contract status.</div><div class="contractPill">Mode: <b>${ruleset().short}</b></div><div class="contractPill">Coach: ready.</div>`;
+    if(state.phase==='bidding')return `<div class="contractPill">Choose an honest bid.</div><div class="contractPill">Coach estimate: <b>${state.handStats.recommendedBid||'-'}</b></div><div class="contractPill">Mode: <b>${ruleset().short}</b></div>`;
+    const need=Math.max(0,nsBid-nsTook), bags=Math.max(0,nsTook-nsBid);
+    const ewNeed=Math.max(0,ewBid-ewTook);
+    const cls=need===0?(bags>0?'warn':'good'):'';
+    let status=need>0?`Need <b>${need}</b> more`:`Contract safe${bags?` · <b>${bags}</b> bag(s)`:''}`;
+    return `<div class="contractPill ${cls}">NS bid ${nsBid} · took ${nsTook}<br>${status}</div><div class="contractPill">You: bid <b>${state.bids.S??'-'}</b> · won <b>${state.tricks.S}</b></div><div class="contractPill">EW bid ${ewBid} · took ${ewTook}<br>${ewNeed>0?`Need ${ewNeed}`:'Safe'}</div>`;
+  }
+
+  const oldRender=render;
+  render=function(){
+    oldRender();
+    ensureContractBar();
+    const cb=document.getElementById('contractBar'); if(cb)cb.innerHTML=contractStatusHTML();
+    const cm=document.getElementById('countModeBtn'); if(cm)cm.textContent=(initStats().cardCountingMode?'Card-counting: ON':'Card-counting: OFF');
+  };
+
+  const oldAfterPlay=afterPlay;
+  afterPlay=function(){
+    if(state.trick.length===4){
+      const w=trickWinner();
+      state.tricks[w]++;
+      state.turn=w; state.leader=w; state.phase='resolve';
+      recordTrickHistory(w);
+      state.stickyLog=trickReviewText(w);
+      state.log='';
+      render();
+      const delay=initStats().cardCountingMode?5200:2200;
+      setTimeout(()=>{
+        state.trick=[];
+        state.lastAINote='';
+        if(state.hands.S.length===0){scoreHand();return}
+        state.phase='play';
+        state.log=`${names[w]} won the trick. ${names[w]} leads next.`;
+        render();
+        if(state.turn!=='S')setTimeout(aiLoop,650)
+      },delay);
+      return;
+    }
+    state.turn=next(state.turn);
+    render();
+    if(state.turn!=='S')setTimeout(aiLoop,650)
+  };
+
+  function lessonForHand(ns,g){
+    if(!ns.made)return {title:'Lesson: protect sure tricks',body:'Your team was set. Count your sure winners early, protect partner winners, and use trump only when it actually saves a book.'};
+    if(g.teamBags>=3)return {title:'Lesson: bag control',body:'Your contract was safe, but the team took too many extras. Once your team has enough books, duck marginal tricks and stop spending power cards.'};
+    if(!g.exactPersonal)return {title:'Lesson: personal bid calibration',body:'Compare your bid to the tricks you actually won. Your goal is not to win every book; it is to make the team contract with as few bags as possible.'};
+    if(state.trickHistory.some(t=>(t.coach||'').includes('forced')))return {title:'Lesson: forced partner plays',body:'Some partner plays look wrong until you check the legal cards. Use Trick History to verify whether North was forced by the led suit.'};
+    return {title:'Lesson: contract discipline',body:'Excellent contract-first play. Keep counting trump, tracking live aces, and protecting partner winners instead of chasing unnecessary bags.'};
+  }
+
+  const oldReportHTML=reportHTML;
+  reportHTML=function(ns,ew){
+    const g=gradeBreakdown(ns);
+    const html=oldReportHTML(ns,ew);
+    const lesson=lessonForHand(ns,g);
+    const bars=`<div class="miniBars">
+      <div class="miniBar"><span>Bid</span>${bar(g.bidAccuracy)}</div>
+      <div class="miniBar"><span>Contract</span>${bar(g.contract)}</div>
+      <div class="miniBar"><span>Bags</span>${bar(g.bagControl)}</div>
+      <div class="miniBar"><span>Partner</span>${bar(g.partnership)}</div>
+    </div>`;
+    return html.replace('</div>`','</div>`') + `<div class="lessonBox"><b>${lesson.title}</b><br>${lesson.body}${bars}</div>`;
+  };
+
+  scoreHand=function(){
+    const ns=scoreTeam('NS');
+    const ew=scoreTeam('EW');
+    const g=gradeBreakdown(ns);
+    recordProgress(ns,g);
+    track('Completed hand',{nsMade:ns.made,ewMade:ew.made});
+    state.phase='complete';state.stickyLog='';
+    state.lastReport=reportHTML(ns,ew)+`<div class="endHint">Press New Hand for the next deal.</div>`;
+    state.log=state.lastReport;
+    if(state.scores.NS>=500||state.scores.EW>=500){
+      const s=initStats();s.matches++;
+      if(state.scores.NS>state.scores.EW){s.wins++}else{s.losses++}
+      saveStats(s);
+      track('Completed match',{winner:state.scores.NS>state.scores.EW?'NS':'EW'});
+      state.matchOver=true;
+      state.log=state.lastReport+`<div class="handReport"><div class="headline">${state.scores.NS>state.scores.EW?'North/South':'East/West'} wins the match. Use Menu → Reset match.</div></div>`;
+    }
+    render();
+  };
+
+  function progressHTML(){
+    const s=initStats(), avg=s.hands?Math.round(s.gradeTotal/s.hands):0;
+    const made=s.hands?Math.round((s.contractsMade/s.hands)*100):0;
+    const exact=s.hands?Math.round((s.exactHands/s.hands)*100):0;
+    const bags=s.hands?(s.totalBags/s.hands).toFixed(1):'0.0';
+    const usage=Object.entries(s.ruleUsage).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<div style="display:flex;justify-content:space-between"><span>${RULESETS[k]?.name||k}</span><b>${v}</b></div>`).join('')||'No hands completed yet.';
+    return `<b>Player progress</b><div class="progressGrid">
+      <div class="progressCard">Skill level<br><b>${skillLevel(avg,s.hands)}</b><div class="smallNote">Average coach score: ${avg||'—'}</div></div>
+      <div class="progressCard">Hands played<br><b>${s.hands}</b><div class="smallNote">Matches: ${s.matches} · Wins: ${s.wins}</div></div>
+      <div class="progressCard">Contract rate<br><b>${made}%</b><div class="smallNote">Exact contracts: ${exact}%</div></div>
+      <div class="progressCard">Best streak<br><b>${s.bestMadeStreak}</b><div class="smallNote">Current made streak: ${s.currentMadeStreak}</div></div>
+      <div class="progressCard">Avg bags<br><b>${bags}</b><div class="smallNote">Lower is usually better.</div></div>
+      <div class="progressCard">Blocked taps<br><b>${s.illegalTapsBlocked}</b><div class="smallNote">Blocked practice taps do not hurt your grade.</div></div>
+    </div><b>Rule-set usage</b><div class="pill" style="margin-top:8px">${usage}</div>`;
+  }
+
+  function dailySeed(){
+    const d=todayKey().replaceAll('-','');
+    let n=0; for(const ch of d) n=(n*31+ch.charCodeAt(0))%9973;
+    return n;
+  }
+  function dailyHTML(){
+    const s=initStats(), key=todayKey(), done=s.dailyCompleted[key];
+    const seed=dailySeed();
+    const scenarios=[
+      {title:'Protect partner',prompt:'South is winning with K♥. North has 3♥ and A♥. What should North play?',choices:['A♥ to secure it','3♥ to protect South','Cut with trump'],answer:1,why:'North should play the safe low heart. Do not overtake your partner unless forced.'},
+      {title:'Avoid the bag',prompt:'Your team bid 6 and already has 6 books. You can win with A♣ or duck with 7♣. What is the training answer?',choices:['Win with A♣','Duck with 7♣','Cut with trump'],answer:1,why:'Once the contract is safe, avoid unnecessary bags when it is safe to duck.'},
+      {title:'Follow suit',prompt:'Clubs were led. You still have 4♣ and several spades. What is legal?',choices:['Play a spade','Play 4♣','Play any card'],answer:1,why:'You must follow suit when possible. Playing a spade while holding clubs would be a renege.'},
+      {title:'Card-counting check',prompt:'Big Joker, Little Joker, and 2♠ are gone in JJDD. What is now the boss trump?',choices:['A♠','2♦','K♠'],answer:1,why:'In JJDD, 2♦ is below 2♠ but above A♠. If the top three are gone, 2♦ is boss.'}
+    ];
+    const sc=scenarios[seed%scenarios.length];
+    const buttons=sc.choices.map((c,i)=>`<button class="challengeChoice" onclick="answerDaily(${i},${sc.answer},'${encodeURIComponent(sc.why)}')">${c}</button>`).join('');
+    return `<b>Daily practice — ${key}</b><br><div class="lessonBox"><b>${sc.title}</b><br>${sc.prompt}</div>${done?`<div class="pill"><b>Completed today.</b><br>${done}</div>`:buttons}<div class="smallNote">Daily practice is local to this device and does not send personal data.</div>`;
+  }
+  window.answerDaily=function(choice,answer,whyEncoded){
+    const why=decodeURIComponent(whyEncoded);
+    const s=initStats(), key=todayKey();
+    const correct=choice===answer;
+    s.dailyCompleted[key]=(correct?'Correct. ':'Review. ')+why;
+    saveStats(s);
+    document.getElementById('coachText').innerHTML=dailyHTML();
+    track('Daily practice answered',{correct});
+  };
+
+  function scenarioDrillsHTML(){
+    return `<b>Scenario drills</b>
+    <div class="lessonBox"><b>Drill 1: Partner protection</b><br>If you are winning and North is your partner, North should throw low and avoid cutting you unless forced.</div>
+    <div class="lessonBox"><b>Drill 2: Contract math</b><br>Before each trick ask: team bid, team books, books needed, bags risk.</div>
+    <div class="lessonBox"><b>Drill 3: Card counting</b><br>After every trick, say out loud: led suit, winner, trump played, and any boss cards now gone.</div>
+    <button class="challengeChoice accentBtn" onclick="document.getElementById('coachText').innerHTML=dailyHTML()">Open today’s challenge</button>`;
+  }
+
+  function reportHandText(){
+    const trickLines=(state.trickHistory||[]).map(t=>`Trick ${t.no}: ${t.plays.map(p=>`${names[p.player]} ${p.card}`).join(' | ')} -> ${names[t.winner]}${t.coach?`\\nCoach: ${t.coach}`:''}`).join('\\n');
+    return `Trickster AI feedback report
+Version: ${VERSION}
+Mode: ${ruleset().name}
+Score: NS ${state.scores.NS} (${state.bags.NS} bags) | EW ${state.scores.EW} (${state.bags.EW} bags)
+Hand: ${state.handNo}
+Phase: ${state.phase}
+Bids: You ${state.bids.S??'-'}, West ${state.bids.W??'-'}, North ${state.bids.N??'-'}, East ${state.bids.E??'-'}
+Tricks: You ${state.tricks.S}, West ${state.tricks.W}, North ${state.tricks.N}, East ${state.tricks.E}
+Blocked illegal taps: ${state.handStats.blockedIllegalClicks||0}
+
+${trickLines||'No completed tricks yet.'}
+
+Issue:
+Describe what looked wrong here.`;
+  }
+  async function feedbackHTML(){
+    const txt=reportHandText();
+    let copied=false;
+    try{await navigator.clipboard.writeText(txt);copied=true}catch(e){}
+    return `<b>Report this hand</b><br>${copied?'Copied a hand report to your clipboard. Paste it into a GitHub issue or message.':'Copy this report and paste it into a GitHub issue or message.'}<div class="reportBox">${txt.replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]))}</div>`;
+  }
+
+  function publicBetaHTML(){
+    return `<b>Public beta checklist</b>
+    <div class="progressGrid">
+      <div class="progressCard"><b>✓</b><br>Polished mobile UI</div>
+      <div class="progressCard"><b>✓</b><br>Cloudflare analytics token installed</div>
+      <div class="progressCard"><b>✓</b><br>Stable rule presets: Standard, Joker-Joker, JJDD</div>
+      <div class="progressCard"><b>✓</b><br>Privacy screen and local-only gameplay counters</div>
+      <div class="progressCard"><b>Next</b><br>README screenshots and tester instructions</div>
+      <div class="progressCard"><b>Next</b><br>More AI test cases and rule tests</div>
+    </div><div class="smallNote">This is still a beta. Keep collecting screenshots when partner play looks questionable.</div>`;
+  }
+
+  // Rebind menu buttons.
+  const bind=()=> {
+    const progressBtn=document.getElementById('progressBtn');
+    if(progressBtn)progressBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=progressHTML();openSheet('coachSheet')};
+    const dailyBtn=document.getElementById('dailyBtn');
+    if(dailyBtn)dailyBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=scenarioDrillsHTML()+dailyHTML();openSheet('coachSheet')};
+    const countBtn=document.getElementById('countModeBtn');
+    if(countBtn)countBtn.onclick=()=>{const s=initStats();s.cardCountingMode=!s.cardCountingMode;saveStats(s);toast(s.cardCountingMode?'Card-counting mode on. Trick pause is longer.':'Card-counting mode off.');render()};
+    const feedbackBtn=document.getElementById('feedbackBtn');
+    if(feedbackBtn)feedbackBtn.onclick=async()=>{closeSheets();document.getElementById('coachText').innerHTML=await feedbackHTML();openSheet('coachSheet')};
+    const betaBtn=document.getElementById('betaBtn');
+    if(betaBtn)betaBtn.onclick=()=>{closeSheets();document.getElementById('coachText').innerHTML=publicBetaHTML();openSheet('coachSheet')};
+  };
+  bind();
+
+  const oldRulesHTML=rulesHTML;
+  rulesHTML=function(){return oldRulesHTML()+`<br><br><b>Training upgrades</b><br>Team contract status is shown during play. Trick history and replay notes are available in Menu. Card-counting mode extends the trick pause. Blocked accidental taps are teaching events only, not penalties.`};
+  appNotes=function(){document.getElementById('coachText').innerHTML=publicBetaHTML();openSheet('coachSheet')};
+
+  render();
+})();
+</script>
+
 </body>
 </html>
