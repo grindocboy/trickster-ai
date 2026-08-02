@@ -6,6 +6,18 @@ Browser-based practice games under one banner:
 - Trickster AI: Learn Blackjack
 - Trickster AI: Learn Poker
 
+## Play Online
+
+### [Play Trickster AI Games](https://grindocboy.github.io/trickster-ai/)
+
+Choose Spades, Blackjack, or Poker from the main game launcher.
+
+Direct game links:
+
+- [Play Spades](https://grindocboy.github.io/trickster-ai/spades.html)
+- [Play Blackjack](https://grindocboy.github.io/trickster-ai/blackjack.html)
+- [Play Poker](https://grindocboy.github.io/trickster-ai/poker.html)
+
 ## Blackjack v0.2.0
 
 - Six-deck persistent shoe and configurable casino rules
@@ -20,21 +32,22 @@ Browser-based practice games under one banner:
 - Strategy quick chart
 - Local browser statistics
 
-## Poker v0.1.0
+## Poker v0.1.3
 
 - Four-player no-limit Texas Hold’em
 - Three AI opponents
 - Preflop, flop, turn, river, and showdown play
 - Fold, check, call, and raise actions
 - Rotating dealer, small blind, and big blind
-- Complete poker-hand evaluation
+- Complete poker-hand evaluation with split-pot and kicker comparisons
 - Opponent cards hidden until showdown
-- Real-time decision coaching
+- Detailed AI showdown coaching
+- Timed action lessons explaining fold, check, call, and raise
 - Starting-hand reference guide
 - Persistent bankroll and session statistics
 - Responsive desktop and mobile layout
 
-## Run locally
+## Run Locally
 
 Open `index.html`, or run:
 
@@ -46,4 +59,8 @@ Then visit `http://localhost:8000`.
 
 ## GitHub Pages
 
-Upload all files to the repository root. In GitHub, open Settings → Pages, choose **Deploy from a branch**, then select `main` and `/(root)`.
+The site is published from the repository root:
+
+**https://grindocboy.github.io/trickster-ai/**
+
+To configure deployment in GitHub, open **Settings → Pages**, choose **Deploy from a branch**, then select `main` and `/(root)`.
