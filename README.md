@@ -3,7 +3,7 @@
 Browser-based practice games under one banner:
 
 - Trickster AI: Learn Spades
-- Trickster AI: Learn Blackjack v0.2.0
+- Trickster AI: Learn Blackjack 
 
 ## Blackjack v0.2.0
 
