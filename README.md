@@ -18,6 +18,25 @@ Direct game links:
 - [Play Blackjack](https://grindocboy.github.io/trickster-ai/blackjack.html)
 - [Play Poker](https://grindocboy.github.io/trickster-ai/poker.html)
 
+## Spades v0.8.0
+
+- Four-player partnership Spades against AI opponents
+- Full bidding from Nil through 13
+- Configurable table rules and scoring options
+- Partner-aware AI play
+- Legal-play enforcement with follow-suit validation
+- Spade-breaking rules
+- Nil and Blind Nil support
+- Bag tracking and bag-penalty scoring
+- Team contract and trick tracking
+- Bidding recommendations and in-hand AI coaching
+- Detailed hand grades and performance feedback
+- Bid, contract, play, bag-control, rules, and partner scoring
+- Strengths and improvement notes after each hand
+- Hand replay and decision review
+- Responsive desktop and mobile card-table layout
+- Persistent match progress in the browser
+
 ## Blackjack v0.2.0
 
 - Six-deck persistent shoe and configurable casino rules
