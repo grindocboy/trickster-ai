@@ -3,7 +3,8 @@
 Browser-based practice games under one banner:
 
 - Trickster AI: Learn Spades
-- Trickster AI: Learn Blackjack 
+- Trickster AI: Learn Blackjack
+- Trickster AI: Learn Poker
 
 ## Blackjack v0.2.0
 
@@ -18,6 +19,20 @@ Browser-based practice games under one banner:
 - Last-round replay and decision audit
 - Strategy quick chart
 - Local browser statistics
+
+## Poker v0.1.0
+
+- Four-player no-limit Texas Hold’em
+- Three AI opponents
+- Preflop, flop, turn, river, and showdown play
+- Fold, check, call, and raise actions
+- Rotating dealer, small blind, and big blind
+- Complete poker-hand evaluation
+- Opponent cards hidden until showdown
+- Real-time decision coaching
+- Starting-hand reference guide
+- Persistent bankroll and session statistics
+- Responsive desktop and mobile layout
 
 ## Run locally
 
