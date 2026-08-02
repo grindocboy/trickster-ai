@@ -1,55 +1,34 @@
-# Trickster AI
+# Trickster AI Games
 
-Learn Spades by actually playing.
+Browser-based practice games under one banner:
 
-Trickster AI is an AI-powered Spades trainer that teaches players through gameplay instead of long tutorials.
+- Trickster AI: Learn Spades
+- Trickster AI: Learn Blackjack v0.2.0
 
-## Features
+## Blackjack v0.2.0
 
-✅ AI opponents
+- Six-deck persistent shoe and configurable casino rules
+- Hit, stand, double, split, surrender
+- Insurance and even money
+- Basic-strategy coaching
+- Selected Hi-Lo true-count deviations
+- Card-count and true-count drills
+- Animated dealing
+- Detailed round grade
+- Last-round replay and decision audit
+- Strategy quick chart
+- Local browser statistics
 
-✅ AI partner
+## Run locally
 
-✅ Beginner to Expert difficulty
+Open `index.html`, or run:
 
-✅ Coaching Mode
+```bash
+python3 -m http.server 8000
+```
 
-✅ Bid recommendations
+Then visit `http://localhost:8000`.
 
-✅ Trick analysis
+## GitHub Pages
 
-✅ Practice hands
-
-✅ Statistics
-
-✅ Mobile friendly
-
-## Coming Soon
-
-• Multiplayer
-
-• Daily challenges
-
-• ELO rankings
-
-• Card counting trainer
-
-• Voice coaching
-
-## Screenshots
-
-(Add screenshots here)
-
-## Goals
-
-Our mission is to become the best way to learn Spades.
-
-Whether you're playing with family, friends, or competitively, Trickster AI helps you improve every hand.
-
-## Contributing
-
-See CONTRIBUTING.md
-
-## License
-
-MIT 
+Upload all files to the repository root. In GitHub, open Settings → Pages, choose **Deploy from a branch**, then select `main` and `/(root)`.
