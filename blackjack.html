@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Trickster AI: Learn Blackjack</title>
+<title>Trickster AI: Learn Blackjack v0.3.0</title>
 <meta name="theme-color" content="#071f18">
 <style>
 :root{
@@ -48,6 +48,12 @@ button{cursor:pointer}
 .chips{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:8px}.chip{border-radius:999px;padding:10px 5px;background:#163d31;color:#fff;border:2px dashed rgba(255,255,255,.25);font-weight:900}
 .coach{background:#071f18;border-radius:12px;padding:11px;color:#dceee7;line-height:1.45;min-height:90px}
 .coach b{color:var(--gold)}
+.wagerCoach{margin-top:10px;background:#071f18;border:1px solid rgba(231,197,104,.28);border-radius:12px;padding:11px;line-height:1.42}
+.wagerCoach .headline{font-weight:950;color:var(--gold);margin-bottom:5px}
+.wagerCoach .good{color:var(--ok);font-weight:900}.wagerCoach .warn{color:#ffd27a;font-weight:900}.wagerCoach .dangerText{color:var(--danger);font-weight:950}
+.wagerGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:8px}.wagerPill{background:#061a14;border-radius:9px;padding:8px;font-size:12px}.wagerPill span{display:block;color:var(--muted);font-size:10px;text-transform:uppercase}.wagerPill b{font-size:14px}
+.unitRow{display:grid;grid-template-columns:1fr 92px;gap:8px;align-items:center;margin-top:9px}.unitRow input{width:100%;background:#061a14;color:#fff;border:1px solid rgba(231,197,104,.35);border-radius:9px;padding:8px}
+.riskBadge{display:inline-block;border-radius:999px;padding:3px 8px;font-size:11px;font-weight:950;margin-top:6px;background:#12392d}.riskBadge.warn{background:#684a17}.riskBadge.danger{background:#6b2727}
 .switches{display:grid;gap:8px}.switch{display:flex;align-items:center;justify-content:space-between;background:#09251d;padding:9px;border-radius:10px;font-size:13px}
 .switch input{transform:scale(1.2)}
 .progress{height:12px;background:#05150f;border-radius:20px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}.progress>div{height:100%;background:linear-gradient(90deg,#e7c568,#f3df9d);width:0}
@@ -72,7 +78,7 @@ button{cursor:pointer}
   <header class="topbar">
     <div class="brand">
       <div class="logo">♠</div>
-      <div><div class="title">Trickster AI <span style="color:var(--gold)">Learn Blackjack</span></div><div class="subtitle">v0.2.0 • realistic play, strategy, replay and Hi-Lo training</div></div>
+      <div><div class="title">Trickster AI <span style="color:var(--gold)">Learn Blackjack</span></div><div class="subtitle">v0.3.0 • realistic play, wager coaching, strategy, replay and Hi-Lo training</div></div>
     </div>
     <div class="top-actions">
       <button class="btn" id="rulesBtn">Table Rules</button>
@@ -138,6 +144,16 @@ button{cursor:pointer}
           <label class="switch">Show basic-strategy hint <input type="checkbox" id="showHint" checked></label>
           <label class="switch">Show live count <input type="checkbox" id="showCount"></label>
           <label class="switch">Count checkpoint mode <input type="checkbox" id="checkpointMode"></label>
+        </div>
+        <div class="wagerCoach" id="wagerCoach">
+          <div class="headline">Wager Coach</div>
+          <div id="wagerCoachText">Calculating recommended wager…</div>
+          <div class="wagerGrid">
+            <div class="wagerPill"><span>Suggested unit</span><b id="suggestedUnit">$10</b></div>
+            <div class="wagerPill"><span>Suggested wager</span><b id="suggestedWager">$10</b></div>
+          </div>
+          <label class="unitRow"><span>Training unit</span><input id="betUnit" type="number" min="5" max="100" step="5" value="10"></label>
+          <label class="switch" style="margin-top:8px">Use count-based spread <input type="checkbox" id="useBetSpread" checked></label>
         </div>
       </section>
 
@@ -228,7 +244,7 @@ const $=id=>document.getElementById(id);
 const state={
   rules:{decks:6,payout:1.5,soft17:'stand',das:true,surrender:true,penetration:.75},
   shoe:[],discard:[],runningCount:0,bankroll:1000,phase:'betting',dealer:[],hands:[],activeHand:0,
-  stats:{rounds:0,wins:0,losses:0,pushes:0,strategyCorrect:0,strategyTotal:0},history:[],shufflePending:false,insuranceBet:0,evenMoney:false,decisionLog:[],lastRound:null,roundStartBankroll:1000
+  stats:{rounds:0,wins:0,losses:0,pushes:0,strategyCorrect:0,strategyTotal:0},history:[],shufflePending:false,insuranceBet:0,evenMoney:false,decisionLog:[],lastRound:null,roundStartBankroll:1000,wagerSettings:{unit:10,useSpread:true}
 };
 
 function save(){localStorage.setItem('tricksterBlackjackState',JSON.stringify({
@@ -258,10 +274,77 @@ function handValue(cards){
 function isBlackjack(cards){return cards.length===2&&handValue(cards).total===21}
 function canSplit(h){return h.cards.length===2&&cardValue(h.cards[0].r)===cardValue(h.cards[1].r)&&state.bankroll>=h.bet}
 function active(){return state.hands[state.activeHand]}
+
+function bankrollBetUnit(){
+  const bankrollUnit=Math.max(10,Math.floor((state.bankroll*.01)/5)*5);
+  const chosen=Math.max(5,Math.min(100,Number(state.wagerSettings.unit)||10));
+  return Math.min(chosen,bankrollUnit);
+}
+function spreadMultiplier(trueCount){
+  if(trueCount<2)return 1;
+  if(trueCount<3)return 2;
+  if(trueCount<4)return 4;
+  if(trueCount<5)return 6;
+  return 8;
+}
+function wagerRecommendation(){
+  const decks=Math.max(.25,state.shoe.length/52),trueCount=state.runningCount/decks,unit=bankrollBetUnit();
+  const multiplier=state.wagerSettings.useSpread?spreadMultiplier(trueCount):1;
+  const maxAffordable=Math.max(0,Math.min(500,Math.floor(state.bankroll/10)*10));
+  const bankrollMin=Math.max(10,Math.round((state.bankroll*.01)/10)*10);
+  const bankrollMax=Math.max(10,Math.round((state.bankroll*.02)/10)*10);
+  const riskCap=Math.max(10,Math.round((state.bankroll*.05)/10)*10);
+  const spreadBet=Math.max(10,Math.round((unit*multiplier)/10)*10);
+  return {trueCount,unit,multiplier,maxAffordable,bankrollMin,bankrollMax,suggested:Math.min(maxAffordable,Math.min(spreadBet,riskCap))};
+}
+function wagerRisk(bet){
+  const pct=state.bankroll>0?(bet/state.bankroll)*100:100;
+  if(pct>=10)return {level:'danger',label:'Very high risk',pct};
+  if(pct>5)return {level:'warn',label:'Oversized wager',pct};
+  if(pct>=2.5)return {level:'warn',label:'Aggressive wager',pct};
+  return {level:'good',label:'Controlled risk',pct};
+}
+function renderWagerCoach(){
+  const w=wagerRecommendation(),selected=Math.max(0,Number($('betInput').value)||0),risk=wagerRisk(selected);
+  $('suggestedUnit').textContent=`$${w.unit}`;
+  $('suggestedWager').textContent=w.maxAffordable>=10?`$${w.suggested}`:'Refill';
+  $('betUnit').value=state.wagerSettings.unit;$('useBetSpread').checked=state.wagerSettings.useSpread;
+  const spreadText=state.wagerSettings.useSpread?`True count ${w.trueCount>=0?'+':''}${w.trueCount.toFixed(1)} maps to ${w.multiplier} unit${w.multiplier===1?'':'s'}.`:'Count-based spreading is off.';
+  const cls=risk.level==='danger'?'dangerText':risk.level==='warn'?'warn':'good';
+  $('wagerCoachText').innerHTML=`<b>Bankroll guidance:</b> $${w.bankrollMin}–$${w.bankrollMax}.<br><b>Recommended now:</b> $${w.suggested}. ${spreadText}<br><span class="${cls}">Your $${selected} wager risks ${risk.pct.toFixed(1)}% of the bankroll.</span><div class="riskBadge ${risk.level==='danger'?'danger':risk.level==='warn'?'warn':''}">${risk.label}</div>`;
+}
+function confirmHighRiskWager(bet){
+  const risk=wagerRisk(bet);if(risk.pct<10)return true;const w=wagerRecommendation();
+  return confirm(`High-risk wager warning\n\nYou are betting $${bet}, or ${risk.pct.toFixed(1)}% of your $${state.bankroll} bankroll.\nThe wager coach recommends about $${w.suggested}.\n\nContinue anyway?`);
+}
+
+function resetPracticeBankroll(){
+  state.bankroll=1000;
+  state.phase='betting';
+  state.dealer=[];
+  state.hands=[];
+  state.activeHand=0;
+  state.insuranceBet=0;
+  state.evenMoney=false;
+  state.decisionLog=[];
+  $('betInput').value=25;
+  log('Practice bankroll refilled to $1,000.');
+  save();
+  render();
+  toast('Practice bankroll restored to $1,000.');
+}
 function deal(){
   if(state.phase!=='betting')return;
+  if(state.bankroll<10){
+    const refill=confirm('You are out of practice chips. Refill your bankroll to $1,000 and continue?');
+    if(refill)resetPracticeBankroll();
+    return;
+  }
   let bet=Math.floor(Number($('betInput').value)/10)*10;
-  if(!Number.isFinite(bet)||bet<10||bet>500||bet>state.bankroll){toast('Choose a valid bet between $10 and $500.');return}
+  if(!Number.isFinite(bet)||bet<10||bet>500||bet>state.bankroll){toast(`Choose a wager from $10 to $${Math.min(500,Math.floor(state.bankroll/10)*10)}.`);return}
+  const betRisk=wagerRisk(bet);
+  if(betRisk.pct>5&&betRisk.pct<10)toast(`Wager warning: $${bet} risks ${betRisk.pct.toFixed(1)}% of your bankroll.`);
+  if(!confirmHighRiskWager(bet))return;
   state.roundStartBankroll=state.bankroll;state.insuranceBet=0;state.evenMoney=false;state.decisionLog=[];
   state.bankroll-=bet;state.dealer=[draw(),draw()];state.hands=[{cards:[draw(),draw()],bet,status:'playing',doubled:false,splitAces:false,result:''}];state.activeHand=0;
   state.decisionLog.push({type:'deal',text:`Initial deal: ${state.hands[0].cards.map(c=>c.r+c.s).join(' ')} vs dealer ${state.dealer[0].r}${state.dealer[0].s}.`});
@@ -430,6 +513,7 @@ function updateCoach(){
     const h=active(),base=basicStrategy(h,dealerUp()),dev=countDeviation(h,dealerUp()),rec=dev?.action||base,v=handValue(h.cards);
     $('coach').innerHTML=$('showHint').checked?`<b>Recommendation:</b> ${rec.toUpperCase()}<br>Hand: ${v.soft?'soft ':'hard '}${v.total} vs dealer ${dealerUp().r}.${dev?`<br><span class="deviation">${dev.text}</span>`:''}`:`<b>Coach hidden.</b> Make your decision, then review it in replay.`
   }else if(state.phase==='complete')$('coach').innerHTML=`<b>Round complete.</b> Grade ${state.lastRound?.grade||'—'} • Net ${state.lastRound?.net>=0?'+':''}$${state.lastRound?.net||0}. Open Replay for the full audit.`;
+  else if(state.phase==='betting'&&state.bankroll<10)$('coach').innerHTML='<b>Bankroll empty.</b> Press <b>Refill</b> to restore $1,000 in practice chips. Your session statistics will remain intact.';
   else $('coach').innerHTML='<b>Goal:</b> Use basic strategy first. Counting is an additional skill, not a substitute for correct play.'
 }
 function renderCard(c,hidden=false){
@@ -450,8 +534,9 @@ function render(){
   const h=active(),play=state.phase==='player';
   $('insuranceBar').classList.toggle('show',state.phase==='insurance');$('evenMoneyBtn').style.display=state.phase==='insurance'&&h&&isBlackjack(h.cards)?'inline-block':'none';
   $('hitBtn').disabled=!play||h?.splitAces;$('standBtn').disabled=!play;$('doubleBtn').disabled=!play||!canDouble();$('splitBtn').disabled=!play||!canSplit(h);$('surrenderBtn').disabled=!play||!state.rules.surrender||h?.cards.length!==2||state.hands.length!==1;
-  $('dealBtn').textContent=state.phase==='complete'?'Next Round':'Deal';$('dealBtn').disabled=!['betting','complete'].includes(state.phase);
-  $('betInput').disabled=state.phase!=='betting';
+  $('dealBtn').textContent=state.phase==='complete'?'Next Round':(state.phase==='betting'&&state.bankroll<10?'Refill':'Deal');
+  $('dealBtn').disabled=!['betting','complete'].includes(state.phase);
+  $('betInput').disabled=state.phase!=='betting'||state.bankroll<10;
   $('bankroll').textContent=`$${Math.round(state.bankroll).toLocaleString()}`;
   $('currentBet').textContent=`$${state.hands.reduce((a,h)=>a+h.bet,0)}`;
   const decks=Math.max(.25,state.shoe.length/52),tc=state.runningCount/decks;
@@ -462,6 +547,7 @@ function render(){
   const acc=state.stats.strategyTotal?Math.round(state.stats.strategyCorrect/state.stats.strategyTotal*100):100;
   $('sessionStats').textContent=`Rounds ${state.stats.rounds} • Wins ${state.stats.wins} • Losses ${state.stats.losses} • Pushes ${state.stats.pushes} • Strategy accuracy ${acc}%`;
   $('history').innerHTML=state.history.map(x=>`<div>${x}</div>`).join('');
+  renderWagerCoach();
   updateCoach()
 }
 function log(t){state.history.unshift(`${new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})} — ${t}`);state.history=state.history.slice(0,50)}
@@ -496,6 +582,9 @@ $('rulesBtn').onclick=()=>openModal('rulesModal');$('trainerBtn').onclick=()=>op
 document.querySelectorAll('[data-close]').forEach(b=>b.onclick=closeModals);
 document.querySelectorAll('.chip').forEach(b=>b.onclick=()=>$('betInput').value=b.dataset.chip);
 $('showHint').onchange=updateCoach;$('showCount').onchange=render;
+$('betInput').addEventListener('input',renderWagerCoach);
+$('betUnit').addEventListener('change',()=>{state.wagerSettings.unit=Math.max(5,Math.min(100,Number($('betUnit').value)||10));save();renderWagerCoach()});
+$('useBetSpread').addEventListener('change',()=>{state.wagerSettings.useSpread=$('useBetSpread').checked;save();renderWagerCoach()});
 $('saveRules').onclick=()=>{
   state.rules.decks=Number($('ruleDecks').value);state.rules.payout=Number($('rulePayout').value);state.rules.soft17=$('ruleSoft17').value;state.rules.das=$('ruleDAS').value==='yes';state.rules.surrender=$('ruleSurrender').value==='yes';state.rules.penetration=Number($('rulePen').value);
   state.phase='betting';state.dealer=[];state.hands=[];closeModals();makeShoe();save()
@@ -511,7 +600,7 @@ let tc={rc:8,decks:4};
 function newTC(){tc.rc=[-12,-10,-8,-6,-4,4,6,8,10,12][Math.floor(Math.random()*10)];tc.decks=[1,2,3,4,5,6][Math.floor(Math.random()*6)];$('tcQuestion').textContent=`Running count ${tc.rc>0?'+':''}${tc.rc} with ${tc.decks} deck${tc.decks>1?'s':''} remaining.`;$('tcAnswer').value=''}
 $('checkTC').onclick=()=>{const ans=Number($('tcAnswer').value),correct=Math.trunc(tc.rc/tc.decks);$('tcFeedback').textContent=ans===correct?`Correct: true count ${correct}.`:`Answer: ${correct}. Running count ÷ decks remaining.`;setTimeout(newTC,900)};
 
-load();makeShoe();nextFlash();newTC();buildStrategyChart();renderReplay();render();
+load();$('betUnit').value=state.wagerSettings.unit;$('useBetSpread').checked=state.wagerSettings.useSpread;makeShoe();nextFlash();newTC();buildStrategyChart();renderReplay();render();
 </script>
 </body>
 </html>
