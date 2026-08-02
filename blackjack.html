@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Trickster AI: Learn Blackjack v0.3.0</title>
+<title>Trickster AI: Learn Blackjack v0.3.1</title>
 <meta name="theme-color" content="#071f18">
 <style>
 :root{
@@ -78,7 +78,7 @@ button{cursor:pointer}
   <header class="topbar">
     <div class="brand">
       <div class="logo">♠</div>
-      <div><div class="title">Trickster AI <span style="color:var(--gold)">Learn Blackjack</span></div><div class="subtitle">v0.3.0 • realistic play, wager coaching, strategy, replay and Hi-Lo training</div></div>
+      <div><div class="title">Trickster AI <span style="color:var(--gold)">Learn Blackjack</span></div><div class="subtitle">v0.3.1 • realistic play, wager coaching, strategy, replay and Hi-Lo training</div></div>
     </div>
     <div class="top-actions">
       <button class="btn" id="rulesBtn">Table Rules</button>
@@ -421,8 +421,21 @@ function basicStrategy(hand,dealerCard){
   if(t===9)return up>=3&&up<=6?'double':'hit';
   return 'hit'
 }
+
+function legalRecommendation(hand,requested){
+  if(requested==='double'&&!canDouble())return 'hit';
+  if(requested==='split'&&!canSplit(hand))return basicStrategy({...hand,cards:[...hand.cards]},dealerUp())==='split'?'hit':requested;
+  if(requested==='surrender'&&(!state.rules.surrender||hand.cards.length!==2||state.hands.length!==1))return 'hit';
+  return requested;
+}
+function currentRecommendation(){
+  const h=active(),base=basicStrategy(h,dealerUp()),dev=countDeviation(h,dealerUp());
+  const requested=dev?.action||base;
+  return {action:legalRecommendation(h,requested),requested,dev};
+}
+
 function recordDecision(action){
-  const base=basicStrategy(active(),dealerUp()),dev=countDeviation(active(),dealerUp()),correct=dev?.action||base;
+  const rec=currentRecommendation(),dev=rec.dev,correct=rec.action;
   const before=handValue(active().cards).total,tc=trueCountNow();
   state.stats.strategyTotal++;const ok=action===correct||(correct==='double'&&action==='hit'&&!canDouble());
   if(ok)state.stats.strategyCorrect++;
@@ -430,11 +443,11 @@ function recordDecision(action){
   log(`${action.toUpperCase()} selected; recommendation: ${correct.toUpperCase()}${dev?' by count deviation':''}.`);
 }
 function canDouble(){const h=active();return h&&h.cards.length===2&&state.bankroll>=h.bet&&(!h.fromSplit||state.rules.das)}
-function hit(){if(state.phase!=='player')return;recordDecision('hit');const h=active();h.cards.push(draw());const v=handValue(h.cards).total;if(v>21){h.status='bust';h.result='Bust';nextHand()}else if(v===21)stand(false);else{checkpointMaybe();updateCoach();render()}}
+function hit(){if(state.phase!=='player'){toast('Finish the current table prompt before hitting.');return;}recordDecision('hit');const h=active();h.cards.push(draw());const v=handValue(h.cards).total;if(v>21){h.status='bust';h.result='Bust';nextHand()}else if(v===21)stand(false);else{checkpointMaybe();updateCoach();render()}}
 function stand(record=true){if(state.phase!=='player')return;if(record)recordDecision('stand');active().status='stand';nextHand()}
-function doubleDown(){if(state.phase!=='player'||!canDouble())return;recordDecision('double');const h=active();state.bankroll-=h.bet;h.bet*=2;h.doubled=true;h.cards.push(draw());h.status=handValue(h.cards).total>21?'bust':'stand';h.result=h.status==='bust'?'Bust':'';nextHand()}
+function doubleDown(){if(state.phase!=='player'){toast('Double is not available right now.');return;}if(!canDouble()){toast('You can only double on the first two cards when funds and table rules allow it.');return;}recordDecision('double');const h=active();state.bankroll-=h.bet;h.bet*=2;h.doubled=true;h.cards.push(draw());h.status=handValue(h.cards).total>21?'bust':'stand';h.result=h.status==='bust'?'Bust':'';nextHand()}
 function split(){
-  if(state.phase!=='player'||!canSplit(active()))return;recordDecision('split');const h=active();state.bankroll-=h.bet;
+  if(state.phase!=='player'){toast('Split is not available right now.');return;}if(!canSplit(active())){toast('Split requires a legal two-card pair and enough bankroll.');return;}recordDecision('split');const h=active();state.bankroll-=h.bet;
   const c1=h.cards[0],c2=h.cards[1],aces=c1.r==='A';
   const h1={cards:[c1,draw()],bet:h.bet,status:'playing',fromSplit:true,splitAces:aces,result:''};
   const h2={cards:[c2,draw()],bet:h.bet,status:'playing',fromSplit:true,splitAces:aces,result:''};
@@ -510,8 +523,9 @@ function updateCoach(){
     const tc=trueCountNow(),take=tc>=3;
     $('coach').innerHTML=`<b>Insurance:</b> Basic strategy declines. Hi-Lo takes insurance at true count +3 or higher.<br>Current true count: ${tc.toFixed(1)} — <span class="deviation">${take?'TAKE INSURANCE':'DECLINE'}</span>.`;
   }else if(state.phase==='player'){
-    const h=active(),base=basicStrategy(h,dealerUp()),dev=countDeviation(h,dealerUp()),rec=dev?.action||base,v=handValue(h.cards);
-    $('coach').innerHTML=$('showHint').checked?`<b>Recommendation:</b> ${rec.toUpperCase()}<br>Hand: ${v.soft?'soft ':'hard '}${v.total} vs dealer ${dealerUp().r}.${dev?`<br><span class="deviation">${dev.text}</span>`:''}`:`<b>Coach hidden.</b> Make your decision, then review it in replay.`
+    const h=active(),recommendation=currentRecommendation(),rec=recommendation.action,dev=recommendation.dev,v=handValue(h.cards);
+    const fallback=recommendation.requested!==rec?`<br><span class="deviation">${recommendation.requested.toUpperCase()} is the two-card strategy, but it is no longer legal. Use ${rec.toUpperCase()}.</span>`:'';
+    $('coach').innerHTML=$('showHint').checked?`<b>Recommendation:</b> ${rec.toUpperCase()}<br>Hand: ${v.soft?'soft ':'hard '}${v.total} vs dealer ${dealerUp().r}.${fallback}${dev&&recommendation.requested===rec?`<br><span class="deviation">${dev.text}</span>`:''}`:`<b>Coach hidden.</b> Make your decision, then review it in replay.`
   }else if(state.phase==='complete')$('coach').innerHTML=`<b>Round complete.</b> Grade ${state.lastRound?.grade||'—'} • Net ${state.lastRound?.net>=0?'+':''}$${state.lastRound?.net||0}. Open Replay for the full audit.`;
   else if(state.phase==='betting'&&state.bankroll<10)$('coach').innerHTML='<b>Bankroll empty.</b> Press <b>Refill</b> to restore $1,000 in practice chips. Your session statistics will remain intact.';
   else $('coach').innerHTML='<b>Goal:</b> Use basic strategy first. Counting is an additional skill, not a substitute for correct play.'
